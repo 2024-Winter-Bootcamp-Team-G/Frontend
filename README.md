@@ -1,2 +1,1 @@
-# template
-Repository template
+# frontend
