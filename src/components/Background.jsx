@@ -1,13 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // React Router 사용
 import startIcon from '../assets/start-icon.png';
+import loginIcon from '../assets/login-icon.svg';
 
-// 랜덤 별 생성
+// 랜덤 별 생성 함수
 const generateRandomStars = (count) => {
   const stars = [];
   for (let i = 0; i < count; i++) {
+    const topPosition = Math.random() * 100;
+
+    // 언더바 위치(90% ~ 100%)에는 별을 생성하지 않음
+    if (topPosition >= 90) {
+      continue;
+    }
+
     stars.push({
       size: `${Math.random() * 0.2 + 0.1}vw`, // 크기: 0.2vw ~ 0.3vw
-      top: `${Math.random() * 100}%`, // 위치: 0% ~ 100% (상단)
+      top: `${topPosition}%`, // 위치: 0% ~ 95% (상단)
       left: `${Math.random() * 100}%`, // 위치: 0% ~ 100% (좌측)
     });
   }
@@ -55,7 +64,7 @@ const Underbar = () => {
         <img
           src={startIcon}
           alt="Start Icon"
-          className="w-[2.5vw] h-[2.5vh] mr-2"
+          className="w-[30px] h-[30px] mr-2"
         />
         Start
       </button>
@@ -79,10 +88,22 @@ const Underbar = () => {
 
 // 배경화면
 const Background = ({ children }) => {
-  const stars = generateRandomStars(30); // 작은 별 30개 생성
+  const [stars, setStars] = useState([]);
+  useEffect(() => {
+    const initialStars = generateRandomStars(30);
+    setStars(initialStars);
+  }, []);
+  const navigate = useNavigate(); // React Router의 네비게이션 함수
 
   return (
     <div className="relative h-screen w-screen bg-[#202020]">
+      {/* SVG 버튼 */}
+      <button
+        className="absolute top-4 left-4 p-2 bg-transparent"
+        onClick={() => navigate('/login')} // /login 경로로 이동
+      >
+        <img src={loginIcon} alt="Login Icon" className="w-[100px] h-[100px]" />
+      </button>
       {/* 랜덤 별 렌더링 */}
       {stars.map((star, index) => (
         <div
