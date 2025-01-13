@@ -2,7 +2,11 @@
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        main: ['NeoDunggeunmo', 'sans-serif'], // 사용자 정의 폰트 추가
+      },
+    },
   },
   plugins: [],
 };
