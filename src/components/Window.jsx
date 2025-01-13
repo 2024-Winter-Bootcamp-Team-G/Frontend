@@ -5,7 +5,7 @@ const Window = ({ children }) => {
     <div className="flex items-center justify-center h-screen w-screen">
       {/* 창 컴포넌트 */}
       <div
-        className="relative bg-[#c3c7cb]"
+        className="relative bg-[#c3c7cb] pt-10"
         style={{
           width: 'min(70%, 1130px)', // 최대 1131px, 화면 크기에 따라 축소
           height: 'min(70%, 674px)', // 최대 674px, 화면 크기에 따라 축소
