@@ -36,7 +36,7 @@ const Underbar = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 h-[5vh] w-full bg-[#C0C0C0] shadow-[0_-1px_0_#000] flex items-center justify-end px-4">
+    <div className="fixed bottom-0 left-0 h-[5vh] min-h-[35px] w-full bg-[#C0C0C0] shadow-[0_-1px_0_#000] flex items-center justify-between px-4">
       {/* Start 버튼 */}
       <button
         className="
@@ -63,7 +63,6 @@ const Underbar = () => {
       {/* 시간 표시 박스 */}
       <div
         className="
-          ml-auto /* 버튼과 시간 박스 사이 간격 */
           inline-flex items-center justify-center
           bg-[#C0C0C0] 
           shadow-[inset_-2px_-2px_0_#FFF,inset_2px_2px_0_#808080]
@@ -83,7 +82,7 @@ const Background = ({ children }) => {
   const stars = generateRandomStars(30); // 작은 별 30개 생성
 
   return (
-    <div className="relative h-screen w-screen bg-black">
+    <div className="relative h-screen w-screen bg-[#202020]">
       {/* 랜덤 별 렌더링 */}
       {stars.map((star, index) => (
         <div
