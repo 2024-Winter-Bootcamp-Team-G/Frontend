@@ -38,6 +38,8 @@ export default [
         { allowConstantExport: true },
       ],
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
+      'no-unused-vars': 'off',
+      'react/prop-types': 'off',
     },
   },
 ];

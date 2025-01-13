@@ -1,6 +1,8 @@
-import './styles/index.css'; // Tailwind CSS 파일 경로를 정확히 지정
+import './styles/index.css';
 import Button from './components/Button';
 import Window from './components/Window';
+import Background from './components/Background';
+
 
 function App() {
   return (
