@@ -11,9 +11,9 @@ const Button = ({ type = 'default', onClick, children }) => {
       onClick={onClick}
       className={`
             ${styles[type]} // 타입에 따라 동적으로 클래스 적용
-            bg-[#C3C7CB]
+            bg-[#C0C0C0]
             border-r-[1px] border-b-[1px] border-[#000]
-            shadow-[inset_1px_1px_0_#FFF,inset_-2px_-2px_0_#808080,inset_2px_2px_0_#DFDFDF]
+            shadow-[inset_2px_2px_0_#FFF,inset_-2px_-2px_0_#808080,inset_2px_2px_0_#DFDFDF]
             cursor-pointer
             active:border-r-[1px] active:border-b-[1px] active:border-[#FFF]
             active:shadow-[inset_1px_1px_0_#000,inset_-2px_-2px_0_#DFDFDF,inset_2px_2px_0_#808080]
