@@ -3,7 +3,8 @@ const Button = ({ type = 'default', onClick, children, className }) => {
   const styles = {
     default: 'w-[300px] h-[60px] text-[32px]', // 기본 버튼 크기와 글씨 크기
     x: 'w-[30px] h-[30px] text-[20px]', // X 버튼 크기와 글씨 크기
-    popup: 'w-[155px] h-[46px] text-[32px]', // 팝업 버튼 크기와 글씨 크기
+    popup: 'w-[155px] h-[40px] text-[24px]', // 팝업 버튼 크기와 글씨 크기
+    ok: 'w-[120px] h-[40px] text-[24px]', // 팝업 버튼 크기와 글씨 크기
   };
 
   return (
