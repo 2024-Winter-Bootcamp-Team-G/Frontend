@@ -5,15 +5,14 @@ import Window from './components/Window';
 import Background from './components/Background';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Window2 from './components/Window2';
+import MiniH from './pages/MiniH';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </BrowserRouter>
+    <div>
+      <MiniH />;
+    </div>
   );
 };
 
