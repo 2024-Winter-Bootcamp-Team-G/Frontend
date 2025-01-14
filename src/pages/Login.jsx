@@ -63,7 +63,7 @@ const Login = () => {
           </div>
           {/* 오른쪽: 로그인 텍스트 및 입력 */}
           <div className="w-[60%]">
-            <h1 className="text-[4rem] font-bold mb-4 text-left">Login</h1>
+            <h1 className="text-[4rem] mb-4 text-left">Login</h1>
             <p className="text-[1.5rem] mb-8 text-left">
               사용자의 이메일과 비밀번호를 입력하여 주십시오.
             </p>
