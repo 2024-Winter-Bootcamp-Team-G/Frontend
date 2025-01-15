@@ -9,6 +9,7 @@ import SignUp from './pages/SignUp';
 import Window2 from './components/Window2';
 import MiniH from './pages/MiniH';
 import TestPage from './pages/TestPage';
+import './styles/scrollbar.css';
 
 const App = () => {
   return (

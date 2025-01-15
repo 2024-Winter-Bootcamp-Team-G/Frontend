@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Input = ({ width = '80%', onChange }) => {
+const Input = ({ width = '80%', type = 'text', onChange }) => {
   return (
     <input
-      type="text" // type 고정
+      type={type}
       onChange={onChange}
       className="
         h-[4vh]

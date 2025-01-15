@@ -7,8 +7,8 @@ const Window = ({ children }) => {
       <div
         className="relative bg-[#c3c7cb] pt-10 p-2"
         style={{
-          width: 'min(70%, 1130px)', // 최대 1131px, 화면 크기에 따라 축소
-          height: 'min(70%, 674px)', // 최대 674px, 화면 크기에 따라 축소
+          width: 'min(90%, 1130px)', // 최대 1131px, 화면 크기에 따라 축소
+          height: 'min(85%, 674px)', // 최대 674px, 화면 크기에 따라 축소
           boxShadow: `
       inset 5px 5px 0px #FFFFFF, /* 위쪽, 왼쪽 흰색 그림자 */
       inset -5px -5px 0px #000000 /* 아래쪽, 오른쪽 검은색 그림자 */
