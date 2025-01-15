@@ -1,10 +1,10 @@
 const Button = ({ type = 'default', onClick, children, className }) => {
   // 버튼 타입별 크기와 스타일
   const styles = {
-    default: 'w-[300px] h-[60px] text-[32px]', // 기본 버튼 크기와 글씨 크기
-    x: 'w-[30px] h-[30px] text-[20px]', // X 버튼 크기와 글씨 크기
-    popup: 'w-[155px] h-[40px] text-[24px]', // 팝업 버튼 크기와 글씨 크기
-    ok: 'w-[120px] h-[40px] text-[24px]', // 팝업 버튼 크기와 글씨 크기
+    default: 'w-[16vw] h-[6vh] min-w-[170px] min-h-[45px] text-[32px]',
+    x: 'w-[clamp(20px,5vh,30px)] h-[clamp(20px,5vh,30px)] aspect-square text-[16px]',
+    popup: 'w-[10vw] h-[5vh] min-w-[100px] min-h-[40px] text-[32px]',
+    ok: 'w-[9vw] h-[4vh] min-w-[90px] min-h-[30px] text-[20px]',
   };
 
   return (
