@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from './Button.jsx';
 
-const Window2 = ({ children }) => {
+const Window2 = ({ children, onClose }) => {
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
 
   const handleMove = (x, y) => {
@@ -45,7 +45,7 @@ const Window2 = ({ children }) => {
             {/* X 버튼 */}
             <Button
               type="x"
-              onClick={() => {}}
+              onClick={onClose}
               className="absolute top-1/2 right-2 transform -translate-y-1/2"
             >
               X
