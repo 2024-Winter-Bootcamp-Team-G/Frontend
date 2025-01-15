@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import Window2 from '../components/Window2';
 import HompImage from '../assets/mini_homp.jpg';
 import Background from '../components/Background';
+import MiniHomp from '../components/MiniHomp';
+
 const MiniH = () => {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   // 창을 닫는 함수
@@ -28,7 +29,7 @@ const MiniH = () => {
   return (
     <Background>
       {isWindowOpen && ( // isWindowOpen이 true일 때만 창을 렌더링
-        <Window2 onClose={handleCloseWindow}>
+        <MiniHomp onClose={handleCloseWindow}>
           {/* 이미지를 감싸는 컨테이너 */}
           <div className="relative w-full h-full leading-none overflow-hidden">
             {' '}
@@ -44,7 +45,7 @@ const MiniH = () => {
               TOTAL {todayDate}
             </div>
           </div>
-        </Window2>
+        </MiniHomp>
       )}
     </Background>
   );
