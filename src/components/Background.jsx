@@ -45,26 +45,28 @@ const Underbar = () => {
   }, []);
 
   return (
+    // 언더바 크기
     <div className="fixed bottom-0 left-0 h-[5vh] min-h-[35px] w-full bg-[#C0C0C0] shadow-[0_-1px_0_#000] flex items-center justify-between px-4">
       {/* Start 버튼 */}
       <button
         className="
-          inline-flex items-center justify-center
-          bg-[#C0C0C0]
-          shadow-[inset_2px_2px_0_#FFF,inset_-2px_-2px_0_#808080,inset_2px_2px_0_#DFDFDF]
-          text-black font-main
-          text-[min(2vw,16px)]
-          px-[1vw] py-[0.5vh]
-          cursor-pointer
-          active:border-r-[1px] active:border-b-[1px] active:border-[#FFF]
-          active:shadow-[inset_1px_1px_0_#000,inset_-2px_-2px_0_#DFDFDF,inset_2px_2px_0_#808080]
-        "
+      inline-flex items-center justify-center
+      bg-[#C0C0C0]
+      shadow-[inset_2px_2px_0_#FFF,inset_-2px_-2px_0_#808080,inset_2px_2px_0_#DFDFDF]
+      text-black font-main
+      text-[min(2vw,16px)]
+      px-[1vw] py-[0.5vh]
+      cursor-pointer
+      active:border-r-[1px] active:border-b-[1px] active:border-[#FFF]
+      active:shadow-[inset_1px_1px_0_#000,inset_-2px_-2px_0_#DFDFDF,inset_2px_2px_0_#808080]
+      h-80%
+    "
         onClick={() => {}}
       >
         <img
           src={startIcon}
           alt="Start Icon"
-          className="w-[30px] h-[30px] mr-2"
+          className="h-[80%] max-h-[25px] aspect-square mr-2"
         />
         Start
       </button>
@@ -72,13 +74,14 @@ const Underbar = () => {
       {/* 시간 표시 박스 */}
       <div
         className="
-          inline-flex items-center justify-center
-          bg-[#C0C0C0] 
-          shadow-[inset_-2px_-2px_0_#FFF,inset_2px_2px_0_#808080]
-          text-black font-main
-          text-[min(2vw,16px)]   /* 폰트 크기 반응형: 최대 16px */
-          px-[1vw] py-[0.5vh]    /* 패딩 반응형: 너비 1vw, 높이 0.5vh */
-        "
+    inline-flex items-center justify-center
+    bg-[#C0C0C0] 
+    shadow-[inset_-2px_-2px_0_#FFF,inset_2px_2px_0_#808080]
+    text-black font-main
+    text-[min(2vw,16px)]   /* 폰트 크기 반응형: 최대 16px */
+    px-[1vw] py-0          /* 가로 패딩만 반응형, 세로 패딩 고정 */
+    h-[32px]               /* 세로 높이 고정 */
+  "
       >
         {time}
       </div>
@@ -97,12 +100,22 @@ const Background = ({ children }) => {
 
   return (
     <div className="relative h-screen w-screen bg-[#202020]">
-      {/* SVG 버튼 */}
+      {/* 로그인/회원가입 버튼 */}
       <button
         className="absolute top-4 left-4 p-2 bg-transparent"
         onClick={() => navigate('/login')} // /login 경로로 이동
       >
-        <img src={loginIcon} alt="Login Icon" className="w-[100px] h-[100px]" />
+        <img
+          src={loginIcon}
+          alt="Login Icon"
+          className="
+      w-16 h-16        // 기본 크기 (64px)
+      sm:w-20 sm:h-20  // 화면 너비 640px 이상 (80px)
+      md:w-24 md:h-24  // 화면 너비 768px 이상 (96px)
+      lg:w-28 lg:h-28  // 화면 너비 1024px 이상 (112px)
+      xl:w-30 xl:h-30  // 화면 너비 1280px 이상 (120px)
+    "
+        />
       </button>
       {/* 랜덤 별 렌더링 */}
       {stars.map((star, index) => (
