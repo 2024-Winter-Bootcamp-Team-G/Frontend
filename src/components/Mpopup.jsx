@@ -3,7 +3,7 @@ import Button from './Button';
 import youtubeImage from '../assets/youtube_icon.png';
 import Input from '../components/Input';
 
-const Mpopup = ({ className, variant = 'default' }) => {
+const Mpopup = ({ className, variant = 'default', onClose }) => {
   const styles = {
     subscribe: `w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)]`,
     profile: `w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)]`,
@@ -55,7 +55,7 @@ const Mpopup = ({ className, variant = 'default' }) => {
           <div className="absolute bottom-3 right-3 flex gap-2">
             <Button
               type="popup"
-              onClick={handleSubscribeClick}
+              onClick={onClose}
               className="w-[155px] h-[46px]"
             >
               취소
@@ -71,7 +71,7 @@ const Mpopup = ({ className, variant = 'default' }) => {
           <div className="absolute bottom-[90.5%] right-[1%] z-10">
             <Button
               type="x"
-              onClick={handleYouLoginClick}
+              onClick={onClose}
               className="w-[27px] h-[27px] flex justify-center items-center text-3xl font-normal"
             >
               X
@@ -104,7 +104,7 @@ const Mpopup = ({ className, variant = 'default' }) => {
           <div className="absolute top-[2%] right-[1%]">
             <Button
               type="x"
-              onClick={handleYouLoginClick}
+              onClick={onClose}
               className="w-[23px] h-[23px] flex justify-center items-center text-3xl font-normal"
             >
               X
@@ -182,7 +182,7 @@ font-normal mt-4"
           <div className="absolute bottom-3 right-3 flex gap-2">
             <Button
               type="popup"
-              onClick={handleSubscribeClick}
+              onClick={onClose}
               className="w-[155px] h-[46px]"
             >
               취소
@@ -198,7 +198,7 @@ font-normal mt-4"
           <div className="absolute bottom-[90.5%] right-[1%] z-10">
             <Button
               type="x"
-              onClick={handleYouLoginClick}
+              onClick={onClose}
               className="w-[27px] h-[27px] flex justify-center items-center text-3xl font-normal"
             >
               X
