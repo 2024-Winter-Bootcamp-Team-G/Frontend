@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp';
 import MiniH from './pages/MiniH';
 import TestPage from './pages/TestPage';
 import './styles/scrollbar.css';
+import './styles/cursor.css';
 
 const App = () => {
   return (
