@@ -30,13 +30,13 @@ const Loading = () => {
         />
 
         {/* 창 상단 바 */}
-        <div className="relative left-[0.8%] top-[1.3%] w-[724px] h-8 bg-[#0000aa]">
-          <div className="absolute top-[0.5px] left-4 text-white">
+        <div className="relative left-[0.8%] top-[1.3%] w-[724px] h-9 bg-[#0000aa]">
+          <div className="absolute top-[1.5px] left-4 text-white">
             <span className="font-normal text-2xl text-white">
               Making your board..
             </span>
           </div>
-          <div className="relative top-[14%] left-[95%] z-10">
+          <div className="relative top-[8%] left-[95%] z-10">
             <Button
               type="x"
               onClick={() => {}}

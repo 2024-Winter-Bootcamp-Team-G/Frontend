@@ -130,8 +130,8 @@ const MiniHomp = ({ children, onClose }) => {
                     />
                   </div>
                   {/* 문구 컨테이너 */}
-                  <div className="absolute top-[60%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[306px] text-left overflow-hidden">
-                    <p className="text-[clamp(14px, 2vw, 20px)] font-medium text-black leading-relaxed whitespace-nowrap">
+                  <div className="absolute top-[58%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[306px] text-left overflow-hidden">
+                    <p className="text-[clamp(14px, 2vw, 18px)] font-medium text-black leading-relaxed whitespace-nowrap">
                       그저 멍하니
                       <br />
                       지금 너의
@@ -147,7 +147,7 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                   {/* 보드 만들기 컨테이너 */}
                   <div className="absolute top-[88%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[300px] flex justify-center items-center">
-                    <div className="flex-shrink-0 w-[90%] max-w-[262px]">
+                    <div className="flex-shrink-0 w-[90%] max-w-[260px]">
                       <Mbutton
                         onClick={() => handleButtonClick('youlogin')}
                         variant="create"
