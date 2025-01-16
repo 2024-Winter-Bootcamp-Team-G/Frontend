@@ -101,7 +101,7 @@ const Mpopup = ({ className, variant = 'default' }) => {
               로그인 하기
             </Button>
           </div>
-          <div className="absolute bottom-[87%] right-[1%]">
+          <div className="absolute top-[2%] right-[1%]">
             <Button
               type="x"
               onClick={handleYouLoginClick}

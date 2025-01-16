@@ -19,7 +19,12 @@ const Home = () => {
           className="relative transition-opacity duration-300 opacity-100"
         >
           <div className="p-4">
-            <h1 className="absolute top-20 left-6 text-5xl font-nomal">
+            <h1
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 2.5rem)',
+              }}
+              className="absolute top-20 left-6 font-nomal"
+            >
               ~~~에 오신것을 환영합니다.
             </h1>
             <div
