@@ -2,6 +2,7 @@ import React from 'react';
 import Mbutton from '../components/Mbutton';
 import Button from '../components/Button';
 import Mpopup from '../components/Mpopup';
+import Loading from '../components/Loading';
 
 const TestPage = () => {
   const handleEdit = () => {};
@@ -58,12 +59,22 @@ const TestPage = () => {
           </Button>
         </div>
       </div>
+
+      {/* Mpopup 테스트 섹션 */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold mb-2">Mpopup 컴포넌트</h2>
         <div className="space-y-2">
           <Mpopup variant="subscribe" className="mb-4" />
           <Mpopup variant="youlogin" className="mb-4" />
           <Mpopup variant="profile" className="mb-4" />
+        </div>
+      </div>
+
+      {/* Loading 테스트 섹션 */}
+      <div className="space-y-4 mb-8">
+        <h2 className="text-xl font-semibold mb-2">Loading 컴포넌트</h2>
+        <div className="space-y-2">
+          <Loading />
         </div>
       </div>
     </div>
