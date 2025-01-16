@@ -1,4 +1,5 @@
 // 미니홈피 레이아웃 직접 작성한 파일
+import React from 'react';
 import { useState } from 'react';
 import Button from './Button.jsx';
 import pageTri from '../assets/page.svg';
@@ -37,7 +38,7 @@ const MiniHomp = ({ children, onClose }) => {
           {/* X 버튼 */}
           <Button
             type="x"
-            onClick={() => {}}
+            onClick={onClose}
             className="absolute top-1/2 right-2 transform -translate-y-1/2"
           >
             X
@@ -135,7 +136,9 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
-                <div className="flex-[7] rounded-[50px] bg-white border-[5px] border-black mx-1"></div>
+                <div className="flex-[7] rounded-[50px] bg-white border-[5px] border-black mx-1">
+                  {children}
+                </div>
               </div>
             </div>
           </div>
