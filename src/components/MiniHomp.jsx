@@ -1,12 +1,22 @@
 // 미니홈피 레이아웃 직접 작성한 파일
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from './Button.jsx';
 import pageTri from '../assets/page.svg';
 import Mbutton from './Mbutton.jsx';
+import Mpopup from './Mpopup.jsx';
 
 const MiniHomp = ({ children, onClose }) => {
+  const [popupVariant, setPopupVariant] = useState(null);
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
+
+  const handleButtonClick = (variant) => {
+    setPopupVariant(variant); // 팝업의 variant 설정
+  };
+
+  const closePopup = () => {
+    setPopupVariant(null); // 팝업 닫기
+  };
 
   const handleMove = (x, y) => {
     setPosition({ x, y });
@@ -20,6 +30,13 @@ const MiniHomp = ({ children, onClose }) => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen overflow-hidden">
+      {/* 팝업 렌더링 */}
+      {popupVariant && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Mpopup variant={popupVariant} onClose={closePopup} />
+        </div>
+      )}
+
       {/* 창 컴포넌트 */}
       <div
         className="relative bg-[#c3c7cb] leading-none shadow-[inset_7px_7px_0px_#FFFFFF,inset_-8px_-8px_0px_#000000]"
@@ -107,7 +124,7 @@ const MiniHomp = ({ children, onClose }) => {
 
                     {/* 버튼 컴포넌트 */}
                     <Mbutton
-                      onClick={() => {}}
+                      onClick={() => handleButtonClick('profile')}
                       className="ml-2"
                       variant="edit"
                     />
@@ -131,7 +148,10 @@ const MiniHomp = ({ children, onClose }) => {
                   {/* 보드 만들기 컨테이너 */}
                   <div className="absolute top-[88%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[300px] flex justify-center items-center">
                     <div className="flex-shrink-0 w-[90%] max-w-[262px]">
-                      <Mbutton onClick={() => {}} variant="create"></Mbutton>
+                      <Mbutton
+                        onClick={() => handleButtonClick('youlogin')}
+                        variant="create"
+                      ></Mbutton>
                     </div>
                   </div>
                 </div>
