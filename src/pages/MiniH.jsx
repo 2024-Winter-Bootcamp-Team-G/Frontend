@@ -99,14 +99,23 @@ const MiniH = () => {
           </div>
           {/* 버튼 그룹 */}
           <div className="absolute flex flex-col top-[20%] right-[-35px]">
-            <button className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-white border-y-[5px] border-r-[5px] border-black text-black text-[20px]">
+            <button
+              className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-white border-y-[5px] border-r-[5px] border-black text-black text-[20px]"
+              onClick={() => {}}
+            >
               홈
             </button>
-            <button className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-[#238BA7] border-y-[5px] border-r-[5px] border-black text-black text-[20px]">
-              게시판
-            </button>
-            <button className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-[#238BA7] border-y-[5px] border-r-[5px] border-black text-black text-[20px]">
+            <button
+              className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-[#238BA7] border-y-[5px] border-r-[5px] border-black text-black text-[20px]"
+              onClick={() => navigate('/board')}
+            >
               보드판
+            </button>
+            <button
+              className="w-[min(80px,10vw)] h-[min(65px,6vw)] bg-[#238BA7] border-y-[5px] border-r-[5px] border-black text-black text-[20px]"
+              onClick={() => navigate('/notice')}
+            >
+              게시판
             </button>
           </div>
         </MiniHomp>
