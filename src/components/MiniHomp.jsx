@@ -1,5 +1,6 @@
 // 미니홈피 레이아웃 직접 작성한 파일
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import Button from './Button.jsx';
 import pageTri from '../assets/page.svg';
@@ -7,8 +8,16 @@ import Mbutton from './Mbutton.jsx';
 import Mpopup from './Mpopup.jsx';
 
 const MiniHomp = ({ children, onClose }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [popupVariant, setPopupVariant] = useState(null);
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
+
+  const buttons = [
+    { name: '홈', path: '/homep' },
+    { name: '보드판', path: '/board' },
+    { name: '게시판', path: '/notice' },
+  ];
 
   const handleButtonClick = (variant) => {
     setPopupVariant(variant); // 팝업의 variant 설정
@@ -105,7 +114,7 @@ const MiniHomp = ({ children, onClose }) => {
                       {/* 이미지 삽입 */}
                       <img
                         src=""
-                        alt="Placeholder"
+                        alt=""
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none';
@@ -156,8 +165,26 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
-                <div className="flex-[7] rounded-[50px] bg-white border-[5px] border-black mx-1">
-                  {children}
+                <div className="flex flex-[7] rounded-[50px] bg-white border-[5px] border-black mx-1 relative">
+                  <div className="absolute inset-0 flex flex-col w-full h-full px-4">
+                    {children}
+                  </div>
+                  {/* 버튼 그룹 */}
+                  <div className="absolute top-[15%] right-[-35px] flex flex-col">
+                    {buttons.map((button) => (
+                      <button
+                        key={button.path}
+                        className={`w-[90px] h-[60px] border-y-[5px] border-r-[5px] border-black text-black text-[20px] mr-[-55px] ${
+                          location.pathname === button.path
+                            ? 'bg-white' // 현재 경로면 흰색
+                            : 'bg-[#238BA7]'
+                        }`}
+                        onClick={() => navigate(button.path)}
+                      >
+                        {button.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
