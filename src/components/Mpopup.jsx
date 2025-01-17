@@ -16,6 +16,17 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
+
+  {
+    preview && (
+      <img
+        src={preview}
+        alt="Preview"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    );
+  }
 
   return (
     <div className="flex items-center justify-center h-screen w-screen">
@@ -122,24 +133,49 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
           </h2>
           <div className="flex">
             <div className="flex flex-col">
+              {/* 프로필 이미지 업로드 영역 */}
               <div
-                className="w-[18.75rem] h-[16.25rem] bg-[#ffffff] flex items-center justify-center mr-12"
+                className="w-[18.75rem] h-[16.25rem] bg-[#ffffff] flex items-center justify-center mr-12 relative overflow-hidden"
                 style={{
                   boxShadow:
                     'inset -3px -3px 0px #FFF, inset 3px 3px 0px #808080',
                 }}
               >
-                <p className="text-gray-500 text-center text-[1rem]">
-                  이미지를 여기에 추가하세요
-                </p>
+                {/* 업로드된 이미지 미리보기 */}
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt="Uploaded Preview"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  // 기본 배경
+                  <p className="text-gray-500 text-center text-[1rem]">
+                    이미지를 여기에 추가하세요
+                  </p>
+                )}
+                {/* 파일 선택 입력 */}
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const imageUrl = URL.createObjectURL(file);
+                      setPreview(imageUrl); // 미리보기 설정
+                    }
+                  }}
+                />
               </div>
-
               <div className="pl-16">
                 <Button
                   type="popup"
-                  onClick={handleSubscribeClick}
-                  className="w-[155px] h-[46px] text-xl
-font-normal mt-4"
+                  onClick={() => {
+                    document.getElementById('fileInput').click(); // 파일 입력 필드 트리거
+                  }}
+                  className="w-[155px] h-[46px] text-xl font-normal mt-4"
                 >
                   프로필 변경
                 </Button>
@@ -155,7 +191,9 @@ font-normal mt-4"
                   이&nbsp;&nbsp;&nbsp;&nbsp;름 :
                 </label>
                 <Input
+                  id="name"
                   name="name"
+                  value={name}
                   className="flex-1"
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -170,9 +208,11 @@ font-normal mt-4"
                   비밀번호 :
                 </label>
                 <Input
+                  id="password"
                   name="password"
                   className="flex-1"
                   type="password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
@@ -189,7 +229,7 @@ font-normal mt-4"
             </Button>
             <Button
               type="popup"
-              onClick={handleSubscribeClick}
+              onClick={() => console.log('저장 클릭')}
               className="w-[155px] h-[46px]"
             >
               저장

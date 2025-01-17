@@ -5,7 +5,7 @@ const Mbutton = ({ onClick, className, variant = 'default' }) => {
   const styles = {
     edit: `w-[119px] h-[49px] bg-white rounded-[10px] border-2 border-[#919191] relative shadow-[2px_3px_0px_0px_rgba(0,0,0,0.25)] before:absolute before:inset-0 before:rounded-[10px] before:shadow-[inset_4px_4px_2px_0px_rgba(255,255,255,0.25)] cursor-pointer
 active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`,
-    create: `max-w-[262px] h-[50px] bg-[#bfcfef] border-4 border-[#5c5c5c]/70 flex items-center justify-center px-4 truncate relative`,
+    create: `max-w-[262px] h-[50px] bg-[#bfcfef] border-4 border-[#5c5c5c]/70 flex items-center justify-center mx-4 pr-8 truncate relative`,
   };
 
   // variant에 따라 스타일 선택 (edit, create, default)
@@ -20,7 +20,7 @@ active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`,
       {variant === 'edit' && (
         <div
           className="absolute inset-0 rounded-[10px] cursor-pointer flex items-center justify-center text-black
-text-[1.3vw]
+text-[1.1vw]
 font-normal"
         >
           정보수정
@@ -29,7 +29,10 @@ font-normal"
       {/* create 버튼의 글자 및 내부 버튼 */}
       {variant === 'create' && (
         <>
-          <div className="text-black text-[clamp(14px, 1.5vw, 20px)] font-normal truncate">
+          <div
+            style={{ fontSize: 'clamp(14px, 1.5vw, 20px)' }}
+            className="text-black font-normal truncate"
+          >
             나의 보드 만들기
           </div>
           <div
