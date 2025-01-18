@@ -101,7 +101,7 @@ const MiniHomp = ({ children, onClose }) => {
               {/* 가로로 3:7 비율 컨테이너 */}
               <div className="flex w-[95%] h-[93%] gap-4 pt-6">
                 {/* 왼쪽 3 비율 컨테이너 */}
-                <div className="relative flex-[3] w-full rounded-[50px] bg-white border-[5px] border-black mx-1 flex flex-col items-center">
+                <div className="relative flex-[3] w-full rounded-[30px] bg-white border-[5px] border-black mx-1 flex flex-col items-center">
                   {/* TODAY 텍스트 */}
                   <div className="absolute top-[-1.8rem] left-1/2 -translate-x-1/2 w-fit flex justify-center whitespace-nowrap">
                     <p className="text-center text-black text-[clamp(12px,2vw,20px)]">
@@ -110,7 +110,7 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                   {/* 이미지 컨테이너 */}
                   <div className="flex justify-center w-full h-full mt-5">
-                    <div className="w-[85%] h-[40%] max-w-[300px] max-h-[260px] bg-[#D9D9D9] rounded-[50px] overflow-hidden">
+                    <div className="w-[85%] h-[40%] max-w-[300px] max-h-[260px] bg-[#D9D9D9] rounded-[20px] overflow-hidden">
                       {/* 이미지 삽입 */}
                       <img
                         src=""
@@ -165,7 +165,7 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
-                <div className="flex flex-[7] rounded-[50px] bg-white border-[5px] border-black mx-1 relative">
+                <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative">
                   <div className="absolute inset-0 flex flex-col w-full h-full px-4">
                     {children}
                   </div>
@@ -174,7 +174,7 @@ const MiniHomp = ({ children, onClose }) => {
                     {buttons.map((button) => (
                       <button
                         key={button.path}
-                        className={`w-[90px] h-[60px] border-y-[5px] border-r-[5px] border-black text-black text-[20px] mr-[-55px] ${
+                        className={`w-[90px] h-[60px] border-y-[5px] border-r-[5px] border-black text-black text-[20px] mr-[-55px] rounded-r-xl ${
                           location.pathname === button.path
                             ? 'bg-white' // 현재 경로면 흰색
                             : 'bg-[#238BA7]'
