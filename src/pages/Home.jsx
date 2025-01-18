@@ -21,7 +21,7 @@ const Home = () => {
           <div className="p-4">
             <h1
               style={{
-                fontSize: 'clamp(2rem, 4vw, 2.5rem)',
+                fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
               }}
               className="absolute top-20 left-6 font-nomal"
             >
@@ -35,7 +35,7 @@ const Home = () => {
               <img
                 src={introImage}
                 alt="Intro"
-                className="absolute bottom-[5%] left-[2%] w-[55%] h-[65%]"
+                className="absolute bottom-[5%] left-[2%] max-w-[95%] h-auto object-contain"
               />
             </div>
           </div>
@@ -43,7 +43,7 @@ const Home = () => {
           <Button
             type="default"
             onClick={handleCloseWindow}
-            className="absolute bottom-4 right-4 w-[10rem] h-[3rem] leading-none"
+            className="absolute bottom-4 right-4 w-[9rem] h-[3rem] leading-none"
           >
             닫기
           </Button>

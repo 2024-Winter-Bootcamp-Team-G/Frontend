@@ -11,14 +11,10 @@ const Window2 = ({ children, onClose }) => {
     <div className="flex items-center justify-center h-screen w-screen">
       {/* 창 컴포넌트 */}
       <div
-        className="relative bg-[#c3c7cb] leading-none pt-10"
+        className="relative bg-[#c3c7cb] leading-none pt-10 shadow-[inset_5px_5px_0px_white,inset_-5px_-5px_0px_white]"
         style={{
           width: 'min(82%, 1644px)', // 최대 1131px, 화면 크기에 따라 축소
           height: 'min(93%, 980px)', // 최대 674px, 화면 크기에 따라 축소
-          boxShadow: `
-      inset 7px 7px 0px #FFFFFF, /* 위쪽, 왼쪽 흰색 그림자 */
-      inset -8px -8px 0px #000000 /* 아래쪽, 오른쪽 검은색 그림자 */
-    `,
           bottom: '2%',
           transform: `translateX(${position.x}%) translateY(${position.y}%)`,
         }}
