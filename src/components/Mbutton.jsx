@@ -18,13 +18,13 @@ active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`,
     >
       {/* edit 버튼의 글자 */}
       {variant === 'edit' && (
-        <div
+        <button
           className="absolute inset-0 rounded-[10px] cursor-pointer flex items-center justify-center text-black
 text-[1.1vw]
 font-normal"
         >
           정보수정
-        </div>
+        </button>
       )}
       {/* create 버튼의 글자 및 내부 버튼 */}
       {variant === 'create' && (
@@ -35,7 +35,7 @@ font-normal"
           >
             나의 보드 만들기
           </div>
-          <div
+          <button
             onClick={onClick}
             className="w-9 h-9 bg-white cursor-pointer absolute top-1/2 -right-3.5 transform -translate-x-1/2 -translate-y-1/2 
             flex items-center justify-center shadow-[2px_2px_1px_0px_rgba(0,0,0,0.25)] active:shadow-[inset_4px_3px_0px_0px_rgba(181,181,181,0.70)]"
@@ -46,7 +46,7 @@ font-normal"
               alt="triangle"
               className="w-4 h-4 transform rotate-270 object-contain" // 크기 및 회전 적용
             />
-          </div>
+          </button>
         </>
       )}
     </div>

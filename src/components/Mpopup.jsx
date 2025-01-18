@@ -106,7 +106,10 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
           <div className="absolute bottom-3 right-[35%]">
             <Button
               type="popup"
-              onClick={handleYouLoginClick}
+              onClick={() => {
+                window.location.href =
+                  'https://accounts.google.com/signin/v2/identifier?service=youtube';
+              }}
               className="w-[120px] h-[40px] text-base font-normal bg-[#bfcfef]"
             >
               로그인 하기
