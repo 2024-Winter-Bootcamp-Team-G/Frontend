@@ -1,8 +1,8 @@
 import React from 'react';
-
 import Button from '../components/Button';
 import Background from '../components/Background';
 import ShareIcon from '../assets/algo.png';
+import RadarChartComponent from '../components/RadarChartComponent';
 
 const Share = ({ onClose }) => {
   return (
@@ -12,28 +12,9 @@ const Share = ({ onClose }) => {
         style={{
           width: 'min(80%, 1644px)',
           height: 'min(90%, 980px)',
+          overflow: 'hidden',
         }}
       >
-        <div className="relative top-[1rem] -left-5 z-10">
-          <img src={ShareIcon} alt="share" className="w-40 h-40" />
-        </div>
-        <p className="relative -top-[5rem] left-[6.5rem] text-black text-2xl">
-          A님과 B님의 알고리즘 일치율
-        </p>
-        <p className="absolute top-[9rem] left-[6.5rem]">
-          해당 페이지에서는 두 분의 알고리즘에 대한 분석을 확인해볼 수 있습니다.
-          <br />
-          <br />
-          차트를 클릭하시면 보다 세부적인 내용 확인이 가능합니다.
-        </p>
-        <div className="relative -right-[53rem] -top-[6.8rem] w-[3rem] h-[1.5rem] bg-[#ed8b67] " />
-        <p className="relative -top-[8.4rem] left-[57rem] text-black text-xl">
-          A님의 알고리즘
-        </p>
-        <div className="relative -right-[53rem] -top-[7.5rem] w-[3rem] h-[1.5rem] bg-[#36abd1] " />
-        <p className="relative -top-[9.1rem] left-[57rem] text-black text-xl">
-          B님의 알고리즘
-        </p>
         {/* 상단 파란색 사각형과 X 버튼 컨테이너 */}
         <div className="absolute top-2 left-[7px] right-[8px] w-[calc(100%-17px)] h-[39px] z-10 bg-[#0000aa]">
           <p className="text-white text-xl absolute top-1 left-2">
@@ -47,6 +28,38 @@ const Share = ({ onClose }) => {
           >
             X
           </Button>
+        </div>
+
+        {/* Share 아이콘 및 텍스트 */}
+        <div className="relative top-[1rem] -left-5 z-10">
+          <img src={ShareIcon} alt="share" className="w-40 h-40" />
+        </div>
+        <p className="relative -top-[5rem] left-[6.5rem] text-black text-2xl">
+          A님과 B님의 알고리즘 일치율
+        </p>
+        <p className="absolute top-[8.5rem] left-[6.5rem]">
+          해당 페이지에서는 두 분의 알고리즘에 대한 분석을 확인해볼 수 있습니다.
+          <br />
+          <br />
+          차트를 클릭하시면 보다 세부적인 내용 확인이 가능합니다.
+        </p>
+
+        {/* A님과 B님의 색상 표시 */}
+        <div className="relative -right-[53rem] -top-[6.8rem] w-[3rem] h-[1.5rem] bg-[#ed8b67] " />
+        <p className="relative -top-[8.4rem] left-[57rem] text-black text-xl">
+          A님의 알고리즘
+        </p>
+        <div className="relative -right-[53rem] -top-[7.5rem] w-[3rem] h-[1.5rem] bg-[#36abd1] " />
+        <p className="relative -top-[9.1rem] left-[57rem] text-black text-xl">
+          B님의 알고리즘
+        </p>
+
+        {/* Radar 차트 및 카테고리별 비율 텍스트 */}
+        <div className="relative -top-[6.5rem] left-[19rem] w-full h-[55vh]">
+          <p className="text-center text-[#3E3E3E] text-xl mb-4">
+            [각 카테고리별 비율]
+          </p>
+          <RadarChartComponent />
         </div>
       </div>
     </Background>
