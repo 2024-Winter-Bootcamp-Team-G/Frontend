@@ -46,7 +46,7 @@ const Underbar = () => {
 
   return (
     // 언더바 크기
-    <div className="fixed bottom-0 left-0 h-[5vh] min-h-[35px] w-full bg-[#C0C0C0] shadow-[0_-1px_0_#000] flex items-center justify-between px-4">
+    <div className="fixed bottom-0 left-0 h-[5vh] min-h-[35px] w-full bg-[#C0C0C0] shadow-[0_-1px_0_#000] flex items-center justify-between px-4 ">
       {/* Start 버튼 */}
       <button
         className="
@@ -99,7 +99,7 @@ const Background = ({ children }) => {
   const navigate = useNavigate(); // React Router의 네비게이션 함수
 
   return (
-    <div className="relative h-screen w-screen bg-[#202020]">
+    <div className="relative h-screen w-screen bg-[#202020] overflow-hidden">
       {/* 로그인/회원가입 버튼 */}
       <button
         className="absolute top-4 left-4 p-2 bg-transparent"

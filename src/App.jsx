@@ -7,6 +7,7 @@ import MiniH from './pages/MiniH';
 import TestPage from './pages/TestPage';
 import Notice from './pages/Notice';
 import Board from './pages/Board';
+import Share from './pages/Share';
 import './styles/scrollbar.css';
 import './styles/cursor.css';
 
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/test" element={<TestPage />} />
         <Route path="/notice" element={<Notice />} />
         <Route path="/board" element={<Board />} />
+        <Route path="/share" element={<Share />} />
       </Routes>
     </BrowserRouter>
   );
