@@ -3,16 +3,16 @@ import Button from '../components/Button';
 import Background from '../components/Background';
 import ShareIcon from '../assets/algo.png';
 import RadarChartComponent from '../components/RadarChartComponent';
+import VennDiagram from '../components/VennDiagram';
 
 const Share = ({ onClose }) => {
   return (
     <Background>
       <div
-        className="absolute right-[5rem] top-[1rem] bg-[#c3c7cb] leading-none shadow-[inset_5px_5px_0px_#FFFFFF,inset_-5px_-5px_0px_#ffffff]"
+        className="absolute right-[5rem] top-[1rem] bg-[#c3c7cb] leading-none shadow-[inset_5px_5px_0px_#FFFFFF,inset_-5px_-5px_0px_#ffffff] overflow-hidden"
         style={{
           width: 'min(80%, 1644px)',
           height: 'min(90%, 980px)',
-          overflow: 'hidden',
         }}
       >
         {/* 상단 파란색 사각형과 X 버튼 컨테이너 */}
@@ -31,7 +31,7 @@ const Share = ({ onClose }) => {
         </div>
 
         {/* Share 아이콘 및 텍스트 */}
-        <div className="relative top-[1rem] -left-5 z-10">
+        <div className="relative top-[1rem] -left-5">
           <img src={ShareIcon} alt="share" className="w-40 h-40" />
         </div>
         <p className="relative -top-[5rem] left-[6.5rem] text-black text-2xl">
@@ -60,6 +60,9 @@ const Share = ({ onClose }) => {
             [각 카테고리별 비율]
           </p>
           <RadarChartComponent />
+        </div>
+        <div className="absolute top-[40%] left-10 w-[46%] aspect-[2/1]">
+          <VennDiagram />
         </div>
       </div>
     </Background>
