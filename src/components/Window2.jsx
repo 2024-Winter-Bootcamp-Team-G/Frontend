@@ -11,7 +11,7 @@ const Window2 = ({ children, onClose }) => {
     <div className="flex items-center justify-center h-screen w-screen">
       {/* 창 컴포넌트 */}
       <div
-        className="relative bg-[#c3c7cb] leading-none pt-10 shadow-[inset_5px_5px_0px_white,inset_-5px_-5px_0px_white]"
+        className="relative bg-[#c3c7cb] leading-none shadow-[inset_5px_5px_0px_white, inset_-5px_-5px_0px_white]"
         style={{
           width: 'min(82%, 1644px)', // 최대 1131px, 화면 크기에 따라 축소
           height: 'min(93%, 980px)', // 최대 674px, 화면 크기에 따라 축소

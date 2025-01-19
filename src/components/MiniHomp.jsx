@@ -134,7 +134,6 @@ const MiniHomp = ({ children, onClose }) => {
                     {/* 버튼 컴포넌트 */}
                     <Mbutton
                       onClick={() => handleButtonClick('profile')}
-                      className="ml-2"
                       variant="edit"
                     />
                   </div>
