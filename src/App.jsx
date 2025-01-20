@@ -10,6 +10,7 @@ import Board from './pages/Board';
 import Share from './pages/Share';
 import './styles/scrollbar.css';
 import './styles/cursor.css';
+import Start from './pages/Start';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/notice" element={<Notice />} />
         <Route path="/board" element={<Board />} />
         <Route path="/share" element={<Share />} />
+        <Route path="/start" element={<Start />} />
       </Routes>
     </BrowserRouter>
   );
