@@ -99,7 +99,7 @@ const Background = ({ children }) => {
   const navigate = useNavigate(); // React Router의 네비게이션 함수
 
   return (
-    <div className="relative h-screen w-screen bg-[#202020] overflow-hidden">
+    <div className="relative h-screen w-screen bg-[#202020] overflow-auto scrollbar-hide">
       {/* 로그인/회원가입 버튼 */}
       <button
         className="absolute top-4 left-4 p-2 bg-transparent"
