@@ -58,7 +58,7 @@ const Board = () => {
           <div className="grid grid-cols-3 px-10 pb-5 w-full h-full">
             <div className="relative flex flex-col">
               {/* 이미지 컨테이너 */}
-              <div className="relative w-[15rem] h-[15rem] bg-[#d9d9d9] rounded-[20px] aspect-square">
+              <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-square">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center"></div>
               </div>
               <Mbutton
