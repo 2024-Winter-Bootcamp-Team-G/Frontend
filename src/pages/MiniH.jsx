@@ -21,8 +21,8 @@ const MiniH = () => {
       {isWindowOpen && ( // isWindowOpen이 true일 때만 창을 렌더링
         <MiniHomp onClose={handleCloseWindow}>
           {/* 제목 */}
-          <div className="overflow-y-auto scrollbar-hide px-14">
-            <div className="text-[#79C6DE] text-left mt-7 text-[2rem]">
+          <div className="overflow-y-auto scrollbar-hide px-8">
+            <div className="text-[#79C6DE] ml-4 text-left mt-7 text-[2rem]">
               How to use?
             </div>
 
@@ -31,7 +31,8 @@ const MiniH = () => {
 
             {/* 공지 글씨 */}
             <div className="text-black text-left mx-4 mb-3 text-[1.5rem]">
-              [공지] 서비스 이용 안내
+              [공지] 서비스 이용 안내{' '}
+              <p className="text-sm inline">(스크롤로 확인 가능합니다.)</p>
             </div>
 
             {/* 실선 */}
@@ -45,7 +46,7 @@ const MiniH = () => {
                 나만의 알고리즘 보드를 만드는 방법은 다음과 같습니다.
               </p>
             </div>
-            <div className="flex items-center justify-between mt-5 mr-3">
+            <div className="flex items-center justify-between mt-5 mr-0">
               <div className="text-black text-[1.25rem]">
                 1. 왼쪽 하단의 버튼을 클릭합니다.
               </div>
@@ -73,7 +74,7 @@ const MiniH = () => {
                 4. 보드판에 보드가 생성됩니다.
               </div>
             </div>
-            <div className="flex mt-3 items-center ml-10 ">
+            <div className="flex mt-3 items-center ml-1 ">
               <img
                 src={SubHelp}
                 alt="Sub Help"
@@ -83,6 +84,10 @@ const MiniH = () => {
             <div className="flex items-start mt-10 mb-3">
               <div className="text-black text-[1.25rem]">
                 5. 공유하기를 누르면 상대방이 알고리즘 일치율 분석보드로 이동할
+                수 있는 url이 복사됩니다.
+                <br />
+                <br />
+                해당 링크를 상대방에게 보내면 상대방이 일치율 분석보드를 확인할
                 수 있습니다.
               </div>
             </div>
