@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // React Router 사용
 import axios from 'axios';
 import startIcon from '../assets/start-icon.png';
 import loginIcon from '../assets/login-icon.svg';
-const [cookies, setCookie, removeCookie] = useCookies(['login_cookie']);
+import { deleteCookie, getCookie } from '../utils/cookie';
 
 // 랜덤 별 생성 함수
 const generateRandomStars = (count) => {
@@ -104,35 +104,45 @@ const Background = ({ children }) => {
   // 로그아웃 처리 함수
   const logout = async () => {
     try {
-      const refreshToken = login_cookie.getItem('refresh_token');
+      const refreshToken = getCookie('refresh_token');
+
+      if (!refreshToken) {
+        alert('Refresh token 없음');
+        navigate('/login');
+        return;
+      }
 
       const response = await axios.post(
-        'http://localhost:8000/auth/logout',
+        `http://localhost:8000/auth/logout?refresh_token=${encodeURIComponent(refreshToken)}`,
         {},
+
         {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`, // Refresh Token을 Bearer 토큰으로 전달
-          },
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
       console.log('Logout successful:', response.data);
 
-      // 로컬 스토리지에서 토큰 제거
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
+      deleteCookie('refresh_token');
+      deleteCookie('access_token');
 
       // 로그인 페이지로 이동
       navigate('/login');
     } catch (error) {
-      console.error(
-        'Logout failed:',
-        error.response ? error.response.data : error.message
-      );
-      alert('로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      if (error.response && error.response.data) {
+        console.error('Logout failed:', error.response.data);
+        if (error.response.data.detail) {
+          console.error(
+            'Error Details:',
+            JSON.stringify(error.response.data.detail, null, 2)
+          ); // 상세 오류 로그
+        }
+      } else {
+        console.error('Logout failed:', error.message);
+      }
+      alert('로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
-
   return (
     <div className="relative h-screen w-screen bg-[#202020] overflow-auto scrollbar-hide">
       {/* 로그인/회원가입 버튼 */}

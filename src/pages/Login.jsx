@@ -5,6 +5,7 @@ import Window from '../components/Window';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import axios from 'axios';
+import { setCookie } from '../utils/cookie';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,9 +31,23 @@ const Login = () => {
 
       console.log('Login successful:', response.data);
 
-      // Access Token 및 Refresh Token 저장
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('refresh_token', response.data.refresh_token);
+      setCookie('access_token', response.data.access_token, {
+        expires: 7,
+        path: '/',
+        secure: true,
+        sameSite: 'Strict',
+      });
+
+      setCookie('refresh_token', response.data.refresh_token, {
+        expires: 30,
+        path: '/',
+        secure: true,
+        sameSite: 'Strict',
+      });
+
+      // // Access Token 및 Refresh Token 저장
+      // localStorage.setItem('access_token', response.data.access_token);
+      // localStorage.setItem('refresh_token', response.data.refresh_token);
 
       // 로그인 성공 시 메인 페이지로 이동
       navigate('/');
