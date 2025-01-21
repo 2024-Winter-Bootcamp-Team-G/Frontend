@@ -1,44 +1,59 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // React Router 사용
+import { useNavigate } from 'react-router-dom';
 import Background from '../components/Background';
 import Window from '../components/Window';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // 에러 메시지 상태
 
-  const handleLogin = async () => {
-    // 서버로 이메일과 비밀번호 보내기
+  const login = async (email, password) => {
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Form 데이터로 전송
+      const formData = new FormData();
+      formData.append('username', email); // 백엔드가 username 필드로 email을 기대함
+      formData.append('password', password);
 
-      if (response.ok) {
-        const data = await response.json();
-
-        // 로그인 성공
-        if (data.success) {
-          console.log('로그인 성공');
-          navigate('/start'); // 시작하기 창으로 이동
-        } else {
-          // 로그인 실패 메시지
-          alert('입력하신 아이디 또는 비밀번호를 찾을 수 없습니다.');
+      const response = await axios.post(
+        'http://localhost:8000/auth/login',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Form 데이터 전송을 위한 헤더
+          },
         }
-      } else {
-        alert('서버와의 통신 중 문제가 발생했습니다.');
-      }
+      );
+
+      console.log('Login successful:', response.data);
+
+      // Access Token 및 Refresh Token 저장
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
+
+      // 로그인 성공 시 메인 페이지로 이동
+      navigate('/start');
     } catch (error) {
-      console.error('로그인 요청 중 오류 발생:', error);
-      alert('로그인 요청 중 오류가 발생했습니다.');
+      if (error.response && error.response.data.detail) {
+        // 유효성 검사 오류 처리
+        setError('이메일 또는 비밀번호가 잘못되었습니다.'); // 사용자에게 에러 메시지 표시
+      } else {
+        // 기타 오류 처리
+        setError('로그인에 실패했습니다. 다시 시도해주세요.'); // 사용자에게 에러 메시지 표시
+      }
+      console.error(
+        'Login failed:',
+        error.response ? error.response.data : error.message
+      );
     }
+  };
+
+  const handleLogin = () => {
+    login(email, password);
   };
 
   const handleSignUp = () => {
@@ -89,9 +104,12 @@ const Login = () => {
                 name="password"
                 width="60%"
                 type="password"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)} // setPassword로 수정
               />
             </div>
+
+            {/* 에러 메시지 표시 */}
+            {error && <p className="text-red-500 text-[1.5rem]">{error}</p>}
           </div>
           <div
             className="absolute bottom-[5.5rem] left-10 w-[90%] h-[3px] bg-[#868A8E] 
