@@ -11,6 +11,11 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
     default: '',
   };
 
+  const handleGoogleLogin = () => {
+    // Google OAuth 인증 요청을 리다이렉트하는 부분 추가
+    window.location.href = 'http://localhost:8000/googleauth/login';
+  };
+
   const handleSubscribeClick = () => {};
   const handleYouLoginClick = () => {};
 
@@ -106,10 +111,7 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
           <div className="absolute bottom-3 right-[35%]">
             <Button
               type="popup"
-              onClick={() => {
-                window.location.href =
-                  'https://accounts.google.com/signin/v2/identifier?service=youtube';
-              }}
+              onClick={handleGoogleLogin}
               className="w-[120px] h-[40px] text-base font-normal bg-[#bfcfef]"
             >
               로그인 하기
