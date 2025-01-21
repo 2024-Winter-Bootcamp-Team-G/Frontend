@@ -4,6 +4,7 @@ import axios from 'axios';
 import startIcon from '../assets/start-icon.png';
 import loginIcon from '../assets/login-icon.svg';
 import { deleteCookie, getCookie } from '../utils/cookie';
+import api from '../api/axios_config';
 
 // 랜덤 별 생성 함수
 const generateRandomStars = (count) => {
@@ -92,6 +93,7 @@ const Underbar = ({ onLogout }) => {
 };
 
 // 배경화면
+// 배경화면
 const Background = ({ children }) => {
   const [stars, setStars] = useState([]);
   const navigate = useNavigate(); // React Router의 네비게이션 함수
@@ -112,13 +114,8 @@ const Background = ({ children }) => {
         return;
       }
 
-      const response = await axios.post(
-        `http://localhost:8000/auth/logout?refresh_token=${encodeURIComponent(refreshToken)}`,
-        {},
-
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
+      const response = await api.post(
+        `/auth/logout?refresh_token=${encodeURIComponent(refreshToken)}`
       );
 
       console.log('Logout successful:', response.data);
@@ -143,6 +140,7 @@ const Background = ({ children }) => {
       alert('로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
+
   return (
     <div className="relative h-screen w-screen bg-[#202020] overflow-auto scrollbar-hide">
       {/* 로그인/회원가입 버튼 */}
