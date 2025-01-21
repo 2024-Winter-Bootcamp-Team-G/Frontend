@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router 사용
+import axios from 'axios';
 import startIcon from '../assets/start-icon.png';
 import loginIcon from '../assets/login-icon.svg';
+import { deleteCookie, getCookie } from '../utils/cookie';
 
 // 랜덤 별 생성 함수
 const generateRandomStars = (count) => {
@@ -24,7 +26,7 @@ const generateRandomStars = (count) => {
 };
 
 // 언더바
-const Underbar = () => {
+const Underbar = ({ onLogout }) => {
   const [time, setTime] = useState('');
 
   // 현재 시간을 업데이트하는 함수
@@ -61,7 +63,7 @@ const Underbar = () => {
       active:shadow-[inset_1px_1px_0_#000,inset_-2px_-2px_0_#DFDFDF,inset_2px_2px_0_#808080]
       h-80%
     "
-        onClick={() => {}}
+        onClick={onLogout} // 로그아웃 함수 연결
       >
         <img
           src={startIcon}
@@ -92,12 +94,55 @@ const Underbar = () => {
 // 배경화면
 const Background = ({ children }) => {
   const [stars, setStars] = useState([]);
+  const navigate = useNavigate(); // React Router의 네비게이션 함수
+
   useEffect(() => {
     const initialStars = generateRandomStars(30);
     setStars(initialStars);
   }, []);
-  const navigate = useNavigate(); // React Router의 네비게이션 함수
 
+  // 로그아웃 처리 함수
+  const logout = async () => {
+    try {
+      const refreshToken = getCookie('refresh_token');
+
+      if (!refreshToken) {
+        alert('Refresh token 없음');
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:8000/auth/logout?refresh_token=${encodeURIComponent(refreshToken)}`,
+        {},
+
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      console.log('Logout successful:', response.data);
+
+      deleteCookie('refresh_token');
+      deleteCookie('access_token');
+
+      // 로그인 페이지로 이동
+      navigate('/login');
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.error('Logout failed:', error.response.data);
+        if (error.response.data.detail) {
+          console.error(
+            'Error Details:',
+            JSON.stringify(error.response.data.detail, null, 2)
+          ); // 상세 오류 로그
+        }
+      } else {
+        console.error('Logout failed:', error.message);
+      }
+      alert('로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
   return (
     <div className="relative h-screen w-screen bg-[#202020] overflow-auto scrollbar-hide">
       {/* 로그인/회원가입 버튼 */}
@@ -133,7 +178,7 @@ const Background = ({ children }) => {
       {/* children 렌더링 */}
       <div>{children}</div>
       {/* 언더바 */}
-      <Underbar />
+      <Underbar onLogout={logout} />
     </div>
   );
 };
