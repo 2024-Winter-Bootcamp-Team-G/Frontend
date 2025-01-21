@@ -14,17 +14,16 @@ const Login = () => {
 
   const login = async (email, password) => {
     try {
-      // Form 데이터로 전송
-      const formData = new FormData();
-      formData.append('username', email); // 백엔드가 username 필드로 email을 기대함
-      formData.append('password', password);
-
+      // JSON 형식으로 전송
       const response = await axios.post(
         'http://localhost:8000/auth/login',
-        formData,
+        {
+          username: email, // 서버가 username 필드를 기대함
+          password: password,
+        },
         {
           headers: {
-            'Content-Type': 'multipart/form-data', // Form 데이터 전송을 위한 헤더
+            'Content-Type': 'application/x-www-form-urlencoded', // JSON 형식 전송을 위한 헤더
           },
         }
       );
@@ -36,7 +35,7 @@ const Login = () => {
       localStorage.setItem('refresh_token', response.data.refresh_token);
 
       // 로그인 성공 시 메인 페이지로 이동
-      navigate('/start');
+      navigate('/');
     } catch (error) {
       if (error.response && error.response.data.detail) {
         // 유효성 검사 오류 처리
