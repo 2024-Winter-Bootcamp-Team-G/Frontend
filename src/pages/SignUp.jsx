@@ -4,25 +4,93 @@ import Background from '../components/Background.jsx';
 import Window from '../components/Window.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
+import axios from 'axios';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [emailExists, setEmailExists] = useState(null); // 이메일 확인 결과 상태
 
-  const handleChange = (field) => (event) => {
-    setFormData({
-      ...formData,
-      [field]: event.target.value,
-    });
+  // 이메일 중복 확인 함수
+  const checkEmail = async () => {
+    if (!email) {
+      alert('이메일을 입력하세요.');
+      return;
+    }
+
+    // 이메일 형식 검사
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert('제대로 된 이메일 형식을 작성해주세요.');
+      return;
+    }
+
+    try {
+      // query parameter로 데이터 전송
+      const response = await axios.get(
+        `http://localhost:8000/auth/check-email?email=${email}`
+      );
+      if (response.data.exists) {
+        setEmailExists(true);
+        alert('이미 존재하는 이메일입니다.');
+      } else {
+        setEmailExists(false);
+        alert('사용 가능한 이메일입니다.');
+      }
+    } catch (error) {
+      console.error('이메일 확인 오류:', error);
+      alert('이메일 확인 중 오류가 발생했습니다.');
+    }
   };
 
-  const handleBack = () => {
-    navigate('/login');
+  // 회원가입 함수
+  const signup = async () => {
+    if (!email || !username || !password || !confirmPassword) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+
+    // 이메일 형식 검사
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert('제대로 된 이메일 형식을 작성해주세요.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    if (emailExists) {
+      alert(
+        '이미 사용 중인 이메일입니다. 이메일을 변경하거나 확인 버튼을 다시 눌러주세요.'
+      );
+      return;
+    } else if (emailExists === null) {
+      alert('이메일 중복 확인을 해주세요');
+    }
+
+    try {
+      const userData = {
+        email: email,
+        password: password,
+        user_name: username,
+      };
+
+      const response = await axios.post(
+        'http://localhost:8000/auth/signup',
+        userData
+      );
+      alert('회원가입 성공');
+      navigate('/login');
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      alert('회원가입 실패');
+    }
   };
 
   return (
@@ -58,7 +126,9 @@ const SignUp = () => {
               <Input
                 name="username"
                 width="70%"
-                onChange={handleChange('username')}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
             </div>
 
@@ -73,9 +143,11 @@ const SignUp = () => {
               <Input
                 name="email"
                 width="50%"
-                onChange={handleChange('email')}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
-              <Button type="ok" onClick={() => {}} className="ml-2">
+              <Button type="ok" onClick={checkEmail} className="ml-2">
                 확인하기
               </Button>
             </div>
@@ -92,7 +164,9 @@ const SignUp = () => {
                 name="password"
                 width="70%"
                 type="password"
-                onChange={handleChange('password')}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                }}
               />
             </div>
 
@@ -108,7 +182,9 @@ const SignUp = () => {
                 name="confirmPassword"
                 width="58%"
                 type="password"
-                onChange={handleChange('confirmPassword')}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -119,10 +195,10 @@ const SignUp = () => {
         ></div>
         {/* 오른쪽 아래 버튼 */}
         <div className="absolute bottom-4 right-4 flex gap-4">
-          <Button type="default" onClick={handleBack}>
+          <Button type="default" onClick={() => navigate('/login')}>
             &lt; 뒤로(B)
           </Button>
-          <Button type="default" onClick={() => {}}>
+          <Button type="default" onClick={signup}>
             완료하기
           </Button>
         </div>
