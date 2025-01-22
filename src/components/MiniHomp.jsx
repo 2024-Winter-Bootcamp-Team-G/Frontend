@@ -1,23 +1,52 @@
-// 미니홈피 레이아웃 직접 작성한 파일
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useContext } from 'react';
 import Button from './Button.jsx';
 import pageTri from '../assets/page.svg';
 import Mbutton from './Mbutton.jsx';
 import Mpopup from './Mpopup.jsx';
+import api from '../api/axios_config'; // axios 설정 파일 import
+import { getCookie } from '../utils/cookie'; // 쿠키 함수 import
 
 const MiniHomp = ({ children, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [popupVariant, setPopupVariant] = useState(null);
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
+  const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
 
   const buttons = [
     { name: '홈', path: '/homep' },
     { name: '보드판', path: '/board' },
     { name: '게시판', path: '/notice' },
   ];
+
+  // 프로필 이미지 가져오기
+  const fetchProfileImage = async () => {
+    try {
+      const user_id = getCookie('user_id'); // 쿠키에서 user_id 가져오기
+      const response = await api.get(`/profile/${user_id}`, {
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`,
+        },
+      });
+
+      console.log('서버 응답:', response.data); // 서버 응답 확인
+
+      if (response.data.url) {
+        // url 키를 사용
+        setProfileImage(response.data.url); // 상태 업데이트
+      } else {
+        console.error('프로필 이미지 URL이 없습니다.');
+      }
+    } catch (error) {
+      console.error('프로필 이미지 가져오기 실패:', error);
+    }
+  };
+
+  // 컴포넌트가 마운트될 때와 팝업이 닫힐 때 이미지 가져오기
+  useEffect(() => {
+    fetchProfileImage();
+  }, [popupVariant]); // popupVariant가 변경될 때마다 실행
 
   const handleButtonClick = (variant) => {
     setPopupVariant(variant); // 팝업의 variant 설정
@@ -112,14 +141,25 @@ const MiniHomp = ({ children, onClose }) => {
                   <div className="flex justify-center w-full h-full mt-5">
                     <div className="w-[85%] h-[40%] max-w-[300px] max-h-[260px] bg-[#D9D9D9] rounded-[20px] overflow-hidden">
                       {/* 이미지 삽입 */}
-                      <img
-                        src=""
-                        alt=""
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
+                      {profileImage ? (
+                        <img
+                          src={profileImage}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                          style={{ display: 'block' }}
+                          onError={(e) => {
+                            e.target.style.display = 'none'; // 이미지 로드 실패 시 숨기기
+                            console.error('이미지 로드 실패:', profileImage); // 에러 로그 출력
+                          }}
+                          onLoad={() =>
+                            console.log('이미지 로드 성공:', profileImage)
+                          } // 이미지 로드 성공 시 로그
+                        />
+                      ) : (
+                        <p className="text-center text-gray-500">
+                          프로필 이미지가 없습니다.
+                        </p>
+                      )}
                     </div>
                   </div>
                   {/* 이름과 버튼 컨테이너 */}
