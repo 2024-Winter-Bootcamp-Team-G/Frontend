@@ -41,7 +41,7 @@ const Login = () => {
         sameSite: 'Strict',
       });
 
-      navigate('/');
+      navigate('/start');
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
       setError('로그인 요청이 실패했습니다. 다시 시도해주세요.');

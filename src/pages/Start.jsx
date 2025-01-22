@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Window from '../components/Window';
 import Button from '../components/Button';
-import introImage from '../assets/intro.png';
+import startImage from '../assets/start_img.png';
 import Background from '../components/Background';
 
 const Start = () => {
@@ -33,8 +33,8 @@ const Start = () => {
             ></div>
             <div className="leading-none">
               <img
-                src={introImage}
-                alt="Intro"
+                src={startImage}
+                alt="Start"
                 className="absolute bottom-[5%] left-[2%] max-w-[95%] h-auto object-contain"
               />
             </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // React Router 사용
 import axios from 'axios';
 import startIcon from '../assets/start-icon.png';
 import loginIcon from '../assets/login-icon.svg';
+import hompIcon from '../assets/homp_icon.png';
 import { deleteCookie, getCookie } from '../utils/cookie';
 import api from '../api/axios_config';
 
@@ -141,6 +142,10 @@ const Background = ({ children }) => {
     }
   };
 
+  // 특정 경로에서는 My homep 아이콘 숨김
+  const hideOnPaths = ['/', '/login', '/signup']; // 숨길 경로들
+  const isHidden = hideOnPaths.includes(location.pathname); // 현재 경로가 숨길 경로에 포함되어 있는지 여부
+
   return (
     <div className="relative h-screen w-screen bg-[#202020] overflow-auto scrollbar-hide">
       {/* 로그인/회원가입 버튼 */}
@@ -160,6 +165,27 @@ const Background = ({ children }) => {
     "
         />
       </button>
+
+      {!isHidden && (
+        <button
+          className="absolute top-[8rem] left-4 p-2 bg-transparent"
+          onClick={() => navigate('/homep')}
+        >
+          <img
+            src={hompIcon}
+            alt="Homp Icon"
+            className="w-16 h-16        // 기본 크기 (64px)
+        sm:w-20 sm:h-20  // 화면 너비 640px 이상 (80px)
+        md:w-24 md:h-24  // 화면 너비 768px 이상 (96px)
+        lg:w-28 lg:h-28  // 화면 너비 1024px 이상 (112px)
+        xl:w-30 xl:h-30  // 화면 너비 1280px 이상 (120px)"
+          />
+          <p className="relative -top-[1.8rem] -left-[0.2rem] text-white">
+            My homep
+          </p>
+        </button>
+      )}
+
       {/* 랜덤 별 렌더링 */}
       {stars.map((star, index) => (
         <div
