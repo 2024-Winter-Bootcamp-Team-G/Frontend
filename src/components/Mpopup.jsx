@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Button from './Button';
 import youtubeImage from '../assets/youtube_icon.png';
 import Input from '../components/Input';
+import api from '../api/axios_config';
+import { getCookie } from '../utils/cookie'; // 쿠키 함수 import
 
 const Mpopup = ({ className, variant = 'default', onClose }) => {
   const styles = {
@@ -22,16 +24,42 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
+  const [file, setFile] = useState(null); // 실제 파일 저장 상태
+  const [profileImageUrl, setProfileImageUrl] = useState(null); // 서버에서 받은 프로필 이미지 URL
 
-  {
-    preview && (
-      <img
-        src={preview}
-        alt="Preview"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-    );
-  }
+  const handleProfileImageUpload = async () => {
+    if (!file) {
+      alert('업로드할 파일을 선택하세요.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file); // FastAPI는 'file' 필드를 기대함
+
+    try {
+      const response = await api.put('/profile/upload', formData, {
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data.profile_img_url) {
+        setProfileImageUrl(response.data.profile_img_url); // 상태 업데이트
+        alert('프로필 이미지가 성공적으로 업로드되었습니다.');
+        onClose();
+      } else {
+        alert('프로필 이미지 업로드에 실패했습니다. 다시 시도하세요.');
+      }
+    } catch (error) {
+      console.error('에러 발생:', error);
+      if (error.response) {
+        console.error('서버 응답 데이터:', error.response.data);
+        console.error('서버 응답 상태:', error.response.status);
+      }
+      alert('프로필 이미지 업로드 중 오류가 발생했습니다. 다시 시도하세요.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen w-screen">
@@ -78,8 +106,11 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
             </Button>
             <Button
               type="popup"
-              onClick={handleSubscribeClick}
-              className="w-[155px] h-[46px]"
+              onClick={() => {
+                console.log('저장 버튼 클릭');
+                handleProfileImageUpload();
+              }}
+              className="w-[155px] h-[46px] z-50 relative"
             >
               저장
             </Button>
@@ -147,9 +178,9 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
                 }}
               >
                 {/* 업로드된 이미지 미리보기 */}
-                {preview ? (
+                {preview || profileImageUrl ? (
                   <img
-                    src={preview}
+                    src={profileImageUrl || preview}
                     alt="Uploaded Preview"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -168,8 +199,10 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (file) {
+                      // 미리보기 이미지로 표시
                       const imageUrl = URL.createObjectURL(file);
-                      setPreview(imageUrl); // 미리보기 설정
+                      setPreview(imageUrl);
+                      setFile(file); // 실제 파일 저장
                     }
                   }}
                 />
@@ -234,7 +267,9 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
             </Button>
             <Button
               type="popup"
-              onClick={() => console.log('저장 클릭')}
+              onClick={() => {
+                handleProfileImageUpload();
+              }}
               className="w-[155px] h-[46px]"
             >
               저장
