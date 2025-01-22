@@ -4,7 +4,7 @@ import Background from '../components/Background.jsx';
 import Window from '../components/Window.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
-import axios from 'axios';
+import api from '../api/axios_config.js';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ const SignUp = () => {
 
     try {
       // query parameter로 데이터 전송
-      const response = await axios.get(
-        `http://localhost:8000/auth/check-email?email=${email}`
-      );
+      const response = await api.get(`/auth/check-email`, {
+        params: { email },
+      });
       if (response.data.exists) {
         setEmailExists(true);
         alert('이미 존재하는 이메일입니다.');
@@ -81,11 +81,10 @@ const SignUp = () => {
         user_name: username,
       };
 
-      const response = await axios.post(
-        'http://localhost:8000/auth/signup',
-        userData
-      );
+      const response = await api.post('/auth/signup', userData);
       alert('회원가입 성공');
+
+      // 회원가입 성공 시 로그인 페이지로 이동
       navigate('/login');
     } catch (error) {
       console.error('회원가입 오류:', error);
