@@ -13,6 +13,7 @@ const MiniHomp = ({ children, onClose }) => {
   const [popupVariant, setPopupVariant] = useState(null);
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
+  const [username, setUsername] = useState(''); // 이름 상태 추가
 
   const buttons = [
     { name: '홈', path: '/homep' },
@@ -24,7 +25,7 @@ const MiniHomp = ({ children, onClose }) => {
   const fetchProfileImage = async () => {
     try {
       const user_id = getCookie('user_id'); // 쿠키에서 user_id 가져오기
-      const response = await api.get(`/profile/${user_id}`, {
+      const response = await api.get(`/profiles/${user_id}`, {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`,
         },
@@ -41,10 +42,42 @@ const MiniHomp = ({ children, onClose }) => {
     }
   };
 
-  // 컴포넌트가 마운트될 때와 팝업이 닫힐 때 이미지 가져오기
+  // 이름 가져오기 (초기 로딩 시에만 사용)
+  const fetchUsername = async () => {
+    try {
+      const response = await api.get('/profiles/get-name', {
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`,
+        },
+      });
+
+      if (response.data.name) {
+        // 'name' 키로 이름을 가져옴
+        setUsername(response.data.name); // 상태 업데이트
+      } else {
+        console.error('서버 응답에 name이 없습니다:', response.data);
+      }
+    } catch (error) {
+      console.error('이름 가져오기 오류:', error);
+    }
+  };
+
+  // 이름 변경 핸들러
+  const handleNameChange = (newName) => {
+    console.log('새로운 이름:', newName); // 디버깅 로그
+    setUsername(newName); // 상태 업데이트
+  };
+
+  // 컴포넌트가 마운트될 때 프로필 이미지와 이름 가져오기
   useEffect(() => {
     fetchProfileImage();
-  }, [popupVariant]); // popupVariant가 변경될 때마다 실행
+    fetchUsername(); // 초기 로딩 시에만 이름 가져오기
+  }, []); // 빈 배열: 컴포넌트 마운트 시에만 실행
+
+  // username 상태가 변경될 때마다 로그 출력
+  useEffect(() => {
+    console.log('username 상태 업데이트:', username);
+  }, [username]);
 
   const handleButtonClick = (variant) => {
     setPopupVariant(variant); // 팝업의 variant 설정
@@ -69,7 +102,11 @@ const MiniHomp = ({ children, onClose }) => {
       {/* 팝업 렌더링 */}
       {popupVariant && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Mpopup variant={popupVariant} onClose={closePopup} />
+          <Mpopup
+            variant={popupVariant}
+            onClose={closePopup}
+            onNameChange={handleNameChange}
+          />
         </div>
       )}
 
@@ -165,7 +202,7 @@ const MiniHomp = ({ children, onClose }) => {
                     {/* 이름 컨테이너 */}
                     <div className="w-[85%] max-w-[174px] h-[50px] bg-[#D9D9D9] rounded-[10px] flex items-center justify-center overflow-hidden">
                       <p className="text-black text-[clamp(12px, 1.5vw, 16px)] font-bold truncate">
-                        이름을 입력하세요
+                        {username || '이름을 불러오는 중...'}
                       </p>
                     </div>
 
