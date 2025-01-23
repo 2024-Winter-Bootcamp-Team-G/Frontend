@@ -25,7 +25,7 @@ const MiniHomp = ({ children, onClose }) => {
   const fetchProfileImage = async () => {
     try {
       const user_id = getCookie('user_id'); // 쿠키에서 user_id 가져오기
-      const response = await api.get(`/profiles/${user_id}`, {
+      const response = await api.get(`/profiles/{user_id}`, {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`,
         },

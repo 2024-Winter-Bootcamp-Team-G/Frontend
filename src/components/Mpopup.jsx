@@ -108,7 +108,7 @@ const Mpopup = ({
     formData.append('file', file); // FastAPI는 'file' 필드를 기대함
 
     try {
-      const response = await api.put('/profile/upload', formData, {
+      const response = await api.put('/profiles/upload', formData, {
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`,
           'Content-Type': 'multipart/form-data',

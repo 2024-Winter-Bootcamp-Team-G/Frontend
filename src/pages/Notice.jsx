@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getBoards } from '../api/board';
 import Background from '../components/Background';
 import MiniHomp from '../components/MiniHomp';
-import api from '../api/axios_config';
 
 const Notice = () => {
   const navigate = useNavigate();
@@ -10,20 +10,15 @@ const Notice = () => {
   const [boards, setBoards] = useState([]); // 보드 목록 상태 추가
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
-  // API 호출하여 보드 목록 가져오기
+  // 보드 목록 가져오기
   useEffect(() => {
     const fetchBoards = async () => {
       setLoading(true);
       try {
-        const response = await api.get('/boards'); // API 호출
-        if (response.status === 200) {
-          setBoards(response.data.result.board); // 보드 목록 상태 업데이트
-        }
+        const data = await getBoards(); // API 호출
+        setBoards(data.result.board);
       } catch (error) {
-        console.error(
-          '보드 목록 가져오기 실패:',
-          error.response?.data || error.message
-        );
+        console.error('보드 목록 가져오기 실패:', error);
         alert('보드 목록을 가져오는 중 문제가 발생했습니다.');
       } finally {
         setLoading(false);
@@ -32,6 +27,11 @@ const Notice = () => {
 
     fetchBoards();
   }, []);
+
+  // 보드 클릭 시 보드 페이지로 이동
+  const handleBoardClick = (boardId) => {
+    navigate('/board');
+  };
 
   // 창을 닫는 함수
   const handleCloseWindow = () => {
@@ -68,6 +68,7 @@ const Notice = () => {
                     <div
                       key={board.board_id}
                       className="text-2xl text-left text-black mx-3 my-8 border-b border-[#b4b4b4]"
+                      onClick={() => handleBoardClick()}
                     >
                       {`${index + 1}. ${new Date(board.created_at).toLocaleDateString()} ${board.board_name}`}
                     </div>
