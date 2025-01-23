@@ -30,7 +30,6 @@ const Login = () => {
       setCookie('access_token', response.data.access_token, {
         expires: 7,
         path: '/',
-        secure: true,
         sameSite: 'Strict',
       });
 
