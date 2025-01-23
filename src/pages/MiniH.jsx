@@ -53,7 +53,7 @@ const MiniH = () => {
                 1. 왼쪽 하단의 버튼을 클릭합니다.
               </div>
               <div className="text-black text-[1.25rem]">
-                2. 유튜브 로그인 창을 들어가 로그인
+                2-1. 유튜브 로그인 창을 들어가 로그인
               </div>
             </div>
             <div className="flex justify-between items-center mt-3 mx-12">
@@ -70,10 +70,10 @@ const MiniH = () => {
             </div>
             <div className="flex items-center justify-between mr-3">
               <div className="text-black text-[1.25rem]">
-                3. 구독 채널 최대 10개를 선택합니다.
+                2-2. 구독 채널 최대 10개를 선택합니다.
               </div>
               <div className="text-black text-[1.25rem]">
-                4. 보드판에 보드가 생성됩니다.
+                3. 보드판에 보드가 생성됩니다.
               </div>
             </div>
             <div className="flex mt-3 items-center ml-1 ">
@@ -84,14 +84,19 @@ const MiniH = () => {
               />
             </div>
             <div className="flex items-start mt-10 mb-3">
-              <div className="text-black text-[1.25rem]">
-                5. 공유하기를 누르면 상대방이 알고리즘 일치율 분석보드로 이동할
+              <p
+                className="text-black text-[1.25rem]"
+                style={{ lineHeight: '1.5' }}
+              >
+                4. 공유하기를 누르면 상대방이 알고리즘 일치율 분석보드로 이동할
                 수 있는 url이 복사됩니다.
-                <br />
                 <br />
                 해당 링크를 상대방에게 보내면 상대방이 일치율 분석보드를 확인할
                 수 있습니다.
-              </div>
+                <br />
+                <br />
+                5. 오른쪽 하단에 start 버튼을 누르면 로그아웃됩니다.
+              </p>
             </div>
           </div>
         </MiniHomp>

@@ -112,7 +112,7 @@ const MiniHomp = ({ children, onClose }) => {
 
       {/* 창 컴포넌트 */}
       <div
-        className="relative bg-[#c3c7cb] leading-none shadow-[inset_7px_7px_0px_#FFFFFF,inset_-8px_-8px_0px_#000000]"
+        className="relative bg-[#c3c7cb] leading-none shadow-[inset_7px_7px_0px_#FFFFFF,inset_-7px_-7px_0px_#ffffff]"
         style={{
           width: 'min(82%, 1644px)',
           height: 'min(93%, 980px)',
@@ -123,7 +123,7 @@ const MiniHomp = ({ children, onClose }) => {
         {/* 상단 파란색 사각형과 X 버튼 컨테이너 */}
         <div className="absolute top-2 left-[7px] right-[8px] w-[calc(100%-17px)] h-[39px] z-10 bg-[#0000aa]">
           <p className="text-white text-xl absolute top-1 left-2">
-            http://www.Gteam.com
+            http://www.Algo.com
           </p>
           {/* X 버튼 */}
           <Button

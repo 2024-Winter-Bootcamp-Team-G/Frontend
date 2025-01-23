@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getCookie } from '../utils/cookie.js';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
+export const BASE_URL =
+  import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
 // 기본 Axios 인스턴스 생성
 const api = axios.create({
@@ -10,6 +11,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json', // 기본 Content-Type 설정
   },
+  withCredentials: true, // 모든 요청에 쿠키 포함
 });
 
 // 요청 인터셉터: 요청을 보내기 전에 실행되는 로직

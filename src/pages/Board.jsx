@@ -11,6 +11,50 @@ const Board = () => {
   const navigate = useNavigate();
   const [isWindowOpen, setIsWindowOpen] = useState(true);
 
+  // 공유하기 버튼 함수
+  const shareBoard = async () => {
+    const boardID = getCookie('board_id'); // 쿠키에서 board_id 가져오기
+
+    if (!boardID) {
+      alert('공유할 보드 ID가 없습니다. 먼저 보드를 생성해주세요.');
+      return;
+    }
+
+    try {
+      const response = await api.post('/boards/share', null, {
+        params: {
+          board_id: parseInt(boardID, 10), // board_id를 query parameter로 전달
+        },
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`, // 인증 토큰 추가
+        },
+        timeout: 10000, // 타임아웃 설정
+      });
+
+      if (response.status === 200) {
+        console.log(response.data.message); // 성공 메시지 출력
+        const sharedLink = response.data.result.shared_url;
+        navigator.clipboard
+          .writeText(sharedLink)
+          .then(() => {
+            alert('보드 공유 성공! 링크가 클립보드에 복사되었습니다.');
+          })
+          .catch((err) => {
+            console.error('클립보드 복사 실패:', err);
+            alert(`보드 공유 성공! 아래 링크를 복사하세요:\n${sharedLink}`);
+          });
+      }
+    } catch (error) {
+      if (error.response?.data?.detail) {
+        console.error('보드 공유 실패:', error.response.data.detail);
+        alert(`보드 공유 실패: ${error.response.data.detail}`);
+      } else {
+        console.error('보드 공유 실패:', error.message);
+        alert('보드 공유 실패: 알 수 없는 오류가 발생했습니다.');
+      }
+    }
+  };
+
   // 창을 닫는 함수
   const handleCloseWindow = () => {
     console.log('창을 닫습니다.');
@@ -40,55 +84,6 @@ const Board = () => {
     );
   };
 
-  // 보드 생성 함수
-  const createBoard = async () => {
-    const channelIds = ['UCHXH4PWrMwHcxxMzML-S0Ig'];
-    const access_token = getCookie('access_token');
-    console.log('쿠키에서 읽은 토큰:', access_token);
-
-    try {
-      if (!access_token) {
-        alert('로그인이 필요합니다.');
-        navigate('/login');
-        return;
-      }
-
-      const response = await api.post('/boards', null, {
-        params: {
-          channel_ids: channelIds.join(','), // 채널 ID 배열 전달
-        },
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-        timeout: 30000,
-      });
-
-      if (response.status === 200) {
-        console.log(response.data.message); // "보드가 성공적으로 생성되었습니다."
-        const boardId = response.data.result.board.id;
-        alert(`보드가 성공적으로 생성되었습니다.`);
-        navigate('/notice'); // 완료 후 공지사항 페이지로 이동
-      }
-    } catch (error) {
-      console.error('보드 생성 실패:', error.response?.data || error.message);
-
-      // 서버 응답에서 detail 배열 확인
-      if (error.response?.data?.detail) {
-        let errorMessage;
-        if (Array.isArray(error.response.data.detail)) {
-          // detail이 배열인 경우
-          errorMessage = error.response.data.detail.join(', ');
-        } else {
-          // detail이 문자열인 경우
-          errorMessage = error.response.data.detail;
-        }
-        alert(`보드 생성에 실패했습니다: ${errorMessage}`);
-      } else {
-        alert('보드 생성에 실패했습니다: 알 수 없는 오류가 발생했습니다.');
-      }
-    }
-  };
-
   return (
     <Background>
       {isWindowOpen && (
@@ -116,12 +111,13 @@ const Board = () => {
                 text="완료하기"
                 className="absolute w-[7rem] h-[2.7rem] mt-[10%]"
                 variant="edit"
-                onClick={createBoard} // 보드 생성 함수 호출
+                onClick={() => {}} // 보드 생성 함수 호출
               />
               <Mbutton
                 text="공유하기"
                 className="absolute w-[7rem] h-[2.7rem] mt-2"
                 variant="edit"
+                onClick={shareBoard}
               />
             </div>
 

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import youtubeImage from '../assets/youtube_icon.png';
 import Input from '../components/Input';
+import Loading from './Loading';
 import api from '../api/axios_config';
-import { getCookie } from '../utils/cookie'; // 쿠키 함수 import
+import { BASE_URL } from '../api/axios_config';
+import { getCookie, setCookie } from '../utils/cookie'; // 쿠키 함수 import
 
 const Mpopup = ({
   className,
@@ -17,6 +20,79 @@ const Mpopup = ({
     youlogin: `w-[402px] h-[209px] bg-[#c3c7cb] border-4 border-black`,
     default: '',
   };
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+
+  const handleGoogleLogin = async () => {
+    try {
+      // Google 로그인 페이지로 이동
+      window.location.href = `${BASE_URL}/googleauth/login`;
+    } catch (error) {
+      console.error('Google OAuth 요청 오류:', error);
+      alert('Google 로그인 요청 중 문제가 발생했습니다.');
+    }
+  };
+
+  const createBoard = async () => {
+    const channelIds = ['UCs7Bw5CQK82AHhyMQ59NZWA'];
+    const access_token = getCookie('access_token');
+
+    if (!access_token) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      setIsLoading(true); // 로딩 시작
+
+      const response = await api.post('/boards', null, {
+        params: {
+          channel_ids: channelIds.join(','), // 채널 ID 배열 전달
+        },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        timeout: 30000, // 30초 타임아웃 설정
+      });
+
+      if (response.status === 200) {
+        console.log(response.data.message); // "보드가 성공적으로 생성되었습니다."
+        const boardId = response.data.result.board.id;
+
+        // 방금 생성한 보드 번호 쿠키에 저장
+        setCookie('board_id', boardId, {
+          path: '/',
+          secure: true,
+          sameSite: 'Strict',
+          expires: 7,
+        });
+
+        alert('보드가 성공적으로 생성되었습니다.');
+        onClose(); // 채널 선택 팝업 닫기
+      }
+    } catch (error) {
+      if (error.code === 'ECONNABORTED') {
+        alert('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+      } else {
+        console.error('보드 생성 실패:', error.response?.data || error.message);
+
+        if (error.response?.data?.detail) {
+          const errorMessage = Array.isArray(error.response.data.detail)
+            ? error.response.data.detail.join(', ')
+            : error.response.data.detail;
+          alert(`보드 생성에 실패했습니다: ${errorMessage}`);
+        } else {
+          alert('보드 생성에 실패했습니다: 알 수 없는 오류가 발생했습니다.');
+        }
+      }
+    } finally {
+      setIsLoading(false); // 로딩 종료
+    }
+  };
+
+  const handleSubscribeClick = () => {};
+  const handleYouLoginClick = () => {};
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -106,6 +182,88 @@ const Mpopup = ({
       alert('이름 변경 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
+  
+  return (
+    <div className="flex items-center justify-center h-screen w-screen">
+      {/* 구독 창 */}
+      {isLoading ? (
+        <Loading /> // 로딩 컴포넌트 렌더링
+      ) : (
+        variant === 'subscribe' && (
+          <div className={`${styles.subscribe} ${className} p-8 relative`}>
+            <div className="w-[875px] h-11 bg-[#0000aa] absolute top-3 left-3" />
+            <h2 className="text-white text-[32px] font-normal relative z-10 mt-2 -top-7 left-[8%]">
+              <img
+                src={youtubeImage} // 이미지 경로
+                alt="Youtube_icon"
+                className="w-13 h-11 absolute left-[-7.5%] top-0" // 이미지 크기 및 오른쪽 여백
+              />
+              구독 채널 선택(최대 10개)
+            </h2>
+            <div
+              className="w-[820px] h-[0px] shadow-[4px_4px_4px_0px_rgba(255,255,255,1.00),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)] border-2 border-[#868a8e] 
+            relative -top-2 left-1/2 transform -translate-x-1/2"
+            />
+
+            {/* 오른쪽에 스크롤 가능한 영역 추가 */}
+            <div className="absolute right-[1.5%] top-[20%] w-[850px] h-[300px] overflow-y-scroll scrollbar-thumb scrollbar-track">
+              <div className="h-[1500px] w-full p-3 flex flex-col gap-8">
+                {/* 체크박스 목록 */}
+                {[...Array(20)].map((_, index) => (
+                  <label key={index} className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      className="w-8 h-8 bg-white cursor-pointer accent-[#0000aa]"
+                      style={{
+                        boxShadow:
+                          '1px 1px 0px 0px #808080 inset, -2px -2px 0px 0px #DFDFDF inset, 2px 2px 0px 0px #000 inset',
+                      }}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          console.log(`체크박스 ${index + 1} 선택됨`);
+                        } else {
+                          console.log(`체크박스 ${index + 1} 해제됨`);
+                        }
+                      }}
+                    />
+                    <span className="text-black text-[18px]">
+                      항목 {index + 1}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="w-[820px] h-[0px] shadow-[4px_4px_4px_0px_rgba(255,255,255,1.00),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)] border-2 border-[#868a8e] absolute bottom-20 left-1/2 transform -translate-x-1/2" />
+
+            <div className="absolute bottom-3 right-3 flex gap-2">
+              <Button
+                type="popup"
+                onClick={onClose}
+                className="w-[155px] h-[46px]"
+              >
+                취소
+              </Button>
+              <Button
+                type="popup"
+                onClick={createBoard}
+                className="w-[155px] h-[46px] z-50 relative"
+              >
+                확인
+              </Button>
+            </div>
+            <div className="absolute bottom-[90.5%] right-[1%] z-10">
+              <Button
+                type="x"
+                onClick={onClose}
+                className="w-[27px] h-[27px] flex justify-center items-center text-3xl font-normal"
+              >
+                X
+              </Button>
+            </div>
+          </div>
+        )
+      )}
 
   // 저장 버튼 클릭 시 실행
   const handleSave = async () => {
