@@ -32,7 +32,9 @@ const MiniH = () => {
             {/* 공지 글씨 */}
             <div className="text-black text-left mx-4 mb-3 text-[1.5rem]">
               [공지] 서비스 이용 안내{' '}
-              <p className="text-sm inline">(스크롤로 확인 가능합니다.)</p>
+              <p className="text-sm inline">
+                (화면이 작을 시, 스크롤로 확인 가능합니다.)
+              </p>
             </div>
 
             {/* 실선 */}

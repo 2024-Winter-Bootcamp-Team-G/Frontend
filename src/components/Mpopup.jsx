@@ -8,7 +8,12 @@ import api from '../api/axios_config';
 import { BASE_URL } from '../api/axios_config';
 import { getCookie, setCookie } from '../utils/cookie'; // 쿠키 함수 import
 
-const Mpopup = ({ className, variant = 'default', onClose }) => {
+const Mpopup = ({
+  className,
+  variant = 'default',
+  onClose,
+  onNameChange = () => {},
+}) => {
   const styles = {
     subscribe: `w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)]`,
     profile: `w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)]`,
@@ -95,11 +100,9 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
   const [file, setFile] = useState(null); // 실제 파일 저장 상태
   const [profileImageUrl, setProfileImageUrl] = useState(null); // 서버에서 받은 프로필 이미지 URL
 
+  // 프로필 이미지 업로드
   const handleProfileImageUpload = async () => {
-    if (!file) {
-      alert('업로드할 파일을 선택하세요.');
-      return;
-    }
+    if (!file) return; // 파일이 없으면 업로드하지 않음
 
     const formData = new FormData();
     formData.append('file', file); // FastAPI는 'file' 필드를 기대함
@@ -115,20 +118,71 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
       if (response.data.profile_img_url) {
         setProfileImageUrl(response.data.profile_img_url); // 상태 업데이트
         alert('프로필 이미지가 성공적으로 업로드되었습니다.');
-        onClose();
       } else {
         alert('프로필 이미지 업로드에 실패했습니다. 다시 시도하세요.');
       }
     } catch (error) {
-      console.error('에러 발생:', error);
-      if (error.response) {
-        console.error('서버 응답 데이터:', error.response.data);
-        console.error('서버 응답 상태:', error.response.status);
-      }
+      console.error('프로필 이미지 업로드 오류:', error);
       alert('프로필 이미지 업로드 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
 
+  // 비밀번호 변경
+  const handlePasswordChange = async () => {
+    if (!password) return; // 비밀번호가 없으면 변경하지 않음
+
+    try {
+      const response = await api.put(
+        '/profiles/password-change',
+        { new_password: password }, // JSON 형식으로 전송
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`,
+            'Content-Type': 'application/json', // JSON 형식 명시
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+      } else {
+        alert('비밀번호 변경에 실패했습니다. 다시 시도하세요.');
+      }
+    } catch (error) {
+      console.error('비밀번호 변경 오류:', error);
+      alert('비밀번호 변경 중 오류가 발생했습니다. 다시 시도하세요.');
+    }
+  };
+
+  // 이름 변경
+  const handleNameChange = async () => {
+    if (!name) return; // 이름이 없으면 변경하지 않음
+
+    try {
+      const response = await api.put(
+        '/profiles/name-change',
+        { name: name }, // 서버에서 요구하는 키는 'name'
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie('access_token')}`,
+            'Content-Type': 'application/json', // JSON 형식 명시
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert('이름이 성공적으로 변경되었습니다.');
+        setName(response.data.user_name); // 서버에서 반환된 새로운 이름으로 상태 업데이트
+        onNameChange(response.data.user_name); // 콜백 호출하여 새로운 이름 전달
+      } else {
+        alert('이름 변경에 실패했습니다. 다시 시도하세요.');
+      }
+    } catch (error) {
+      console.error('이름 변경 오류:', error);
+      alert('이름 변경 중 오류가 발생했습니다. 다시 시도하세요.');
+    }
+  };
+  
   return (
     <div className="flex items-center justify-center h-screen w-screen">
       {/* 구독 창 */}
@@ -211,39 +265,17 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
         )
       )}
 
-      {/* 로그인 창 */}
-      {variant === 'youlogin' && (
-        <div className={`${styles.youlogin} ${className} p-8 relative`}>
-          <h2 className="text-center text-2xl font-bold mb-4 -mt-2">
-            유튜브 로그인
-          </h2>
-          <p className="text-center text-black text-x1 font-normal mb-8 -mt-2">
-            보드를 만들기 위해서는
-            <br />
-            유튜브 로그인이 필요합니다. <br />
-            로그인 하시겠습니까?
-          </p>
-          <div className="absolute bottom-3 right-[35%]">
-            <Button
-              type="popup"
-              onClick={handleGoogleLogin}
-              className="w-[120px] h-[40px] text-base font-normal bg-[#bfcfef]"
-            >
-              로그인 하기
-            </Button>
-          </div>
-          <div className="absolute top-[2%] right-[1%]">
-            <Button
-              type="x"
-              onClick={onClose}
-              className="w-[23px] h-[23px] flex justify-center items-center text-3xl font-normal"
-            >
-              X
-            </Button>
-          </div>
-        </div>
-      )}
+  // 저장 버튼 클릭 시 실행
+  const handleSave = async () => {
+    if (file) await handleProfileImageUpload(); // 사진이 변경된 경우
+    if (password) await handlePasswordChange(); // 비밀번호가 변경된 경우
+    if (name) await handleNameChange(); // 이름이 변경된 경우
 
+    onClose(); // 팝업 닫기
+  };
+
+  return (
+    <div className="flex items-center justify-center h-screen w-screen">
       {/* 정보수정 창 */}
       {variant === 'profile' && (
         <div className={`${styles.profile} ${className} p-8 relative`}>
@@ -351,9 +383,7 @@ const Mpopup = ({ className, variant = 'default', onClose }) => {
             </Button>
             <Button
               type="popup"
-              onClick={() => {
-                handleProfileImageUpload();
-              }}
+              onClick={handleSave} // 저장 버튼 클릭 시 handleSave 실행
               className="w-[155px] h-[46px]"
             >
               저장
