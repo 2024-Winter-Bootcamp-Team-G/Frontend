@@ -172,8 +172,8 @@ const Mpopup = ({
 
       if (response.status === 200) {
         alert('이름이 성공적으로 변경되었습니다.');
-        setName(response.data.user_name); // 서버에서 반환된 새로운 이름으로 상태 업데이트
-        onNameChange(response.data.user_name); // 콜백 호출하여 새로운 이름 전달
+        setName(response.data.user_name); // 상태 업데이트
+        onNameChange(response.data.user_name); // 부모 컴포넌트에 새로운 이름 전달
       } else {
         alert('이름 변경에 실패했습니다. 다시 시도하세요.');
       }
@@ -182,7 +182,16 @@ const Mpopup = ({
       alert('이름 변경 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
-  
+
+  // 저장 버튼 클릭 시 실행
+  const handleSave = async () => {
+    if (file) await handleProfileImageUpload(); // 사진이 변경된 경우
+    if (password) await handlePasswordChange(); // 비밀번호가 변경된 경우
+    if (name) await handleNameChange(); // 이름이 변경된 경우
+
+    onClose(); // 팝업 닫기
+  };
+
   return (
     <div className="flex items-center justify-center h-screen w-screen">
       {/* 구독 창 */}
@@ -265,17 +274,39 @@ const Mpopup = ({
         )
       )}
 
-  // 저장 버튼 클릭 시 실행
-  const handleSave = async () => {
-    if (file) await handleProfileImageUpload(); // 사진이 변경된 경우
-    if (password) await handlePasswordChange(); // 비밀번호가 변경된 경우
-    if (name) await handleNameChange(); // 이름이 변경된 경우
+      {/* 로그인 창 */}
+      {variant === 'youlogin' && (
+        <div className={`${styles.youlogin} ${className} p-8 relative`}>
+          <h2 className="text-center text-2xl font-bold mb-4 -mt-2">
+            유튜브 로그인
+          </h2>
+          <p className="text-center text-black text-x1 font-normal mb-8 -mt-2">
+            보드를 만들기 위해서는
+            <br />
+            유튜브 로그인이 필요합니다. <br />
+            로그인 하시겠습니까?
+          </p>
+          <div className="absolute bottom-3 right-[35%]">
+            <Button
+              type="popup"
+              onClick={handleGoogleLogin}
+              className="w-[120px] h-[40px] text-base font-normal bg-[#bfcfef]"
+            >
+              로그인 하기
+            </Button>
+          </div>
+          <div className="absolute top-[2%] right-[1%]">
+            <Button
+              type="x"
+              onClick={onClose}
+              className="w-[23px] h-[23px] flex justify-center items-center text-3xl font-normal"
+            >
+              X
+            </Button>
+          </div>
+        </div>
+      )}
 
-    onClose(); // 팝업 닫기
-  };
-
-  return (
-    <div className="flex items-center justify-center h-screen w-screen">
       {/* 정보수정 창 */}
       {variant === 'profile' && (
         <div className={`${styles.profile} ${className} p-8 relative`}>
