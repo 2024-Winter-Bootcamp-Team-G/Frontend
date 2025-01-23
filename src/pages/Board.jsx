@@ -33,8 +33,16 @@ const Board = () => {
 
       if (response.status === 200) {
         console.log(response.data.message); // 성공 메시지 출력
-        alert(`보드 공유 성공! \n
-          링크: ${response.data.result.shared_url}`);
+        const sharedLink = response.data.result.shared_url;
+        navigator.clipboard
+          .writeText(sharedLink)
+          .then(() => {
+            alert('보드 공유 성공! 링크가 클립보드에 복사되었습니다.');
+          })
+          .catch((err) => {
+            console.error('클립보드 복사 실패:', err);
+            alert(`보드 공유 성공! 아래 링크를 복사하세요:\n${sharedLink}`);
+          });
       }
     } catch (error) {
       if (error.response?.data?.detail) {

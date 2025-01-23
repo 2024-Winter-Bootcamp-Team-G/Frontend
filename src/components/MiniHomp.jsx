@@ -75,7 +75,7 @@ const MiniHomp = ({ children, onClose }) => {
 
       {/* 창 컴포넌트 */}
       <div
-        className="relative bg-[#c3c7cb] leading-none shadow-[inset_7px_7px_0px_#FFFFFF,inset_-8px_-8px_0px_#000000]"
+        className="relative bg-[#c3c7cb] leading-none shadow-[inset_7px_7px_0px_#FFFFFF,inset_-7px_-7px_0px_#ffffff]"
         style={{
           width: 'min(82%, 1644px)',
           height: 'min(93%, 980px)',
