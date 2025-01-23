@@ -4,6 +4,8 @@ import Background from '../components/Background';
 import MiniHomp from '../components/MiniHomp';
 import Mbutton from '../components/Mbutton';
 import Retry from '../assets/retry.png';
+import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
+import { getCookie } from '../utils/cookie';
 
 const Board = () => {
   const navigate = useNavigate();
@@ -38,6 +40,55 @@ const Board = () => {
     );
   };
 
+  // 보드 생성 함수
+  const createBoard = async () => {
+    const channelIds = ['UCHXH4PWrMwHcxxMzML-S0Ig'];
+    const access_token = getCookie('access_token');
+    console.log('쿠키에서 읽은 토큰:', access_token);
+
+    try {
+      if (!access_token) {
+        alert('로그인이 필요합니다.');
+        navigate('/login');
+        return;
+      }
+
+      const response = await api.post('/boards', null, {
+        params: {
+          channel_ids: channelIds.join(','), // 채널 ID 배열 전달
+        },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        timeout: 30000,
+      });
+
+      if (response.status === 200) {
+        console.log(response.data.message); // "보드가 성공적으로 생성되었습니다."
+        const boardId = response.data.result.board.id;
+        alert(`보드가 성공적으로 생성되었습니다.`);
+        navigate('/notice'); // 완료 후 공지사항 페이지로 이동
+      }
+    } catch (error) {
+      console.error('보드 생성 실패:', error.response?.data || error.message);
+
+      // 서버 응답에서 detail 배열 확인
+      if (error.response?.data?.detail) {
+        let errorMessage;
+        if (Array.isArray(error.response.data.detail)) {
+          // detail이 배열인 경우
+          errorMessage = error.response.data.detail.join(', ');
+        } else {
+          // detail이 문자열인 경우
+          errorMessage = error.response.data.detail;
+        }
+        alert(`보드 생성에 실패했습니다: ${errorMessage}`);
+      } else {
+        alert('보드 생성에 실패했습니다: 알 수 없는 오류가 발생했습니다.');
+      }
+    }
+  };
+
   return (
     <Background>
       {isWindowOpen && (
@@ -65,7 +116,7 @@ const Board = () => {
                 text="완료하기"
                 className="absolute w-[7rem] h-[2.7rem] mt-[10%]"
                 variant="edit"
-                onClick={() => navigate('/notice')}
+                onClick={createBoard} // 보드 생성 함수 호출
               />
               <Mbutton
                 text="공유하기"

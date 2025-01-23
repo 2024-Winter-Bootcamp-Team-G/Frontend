@@ -30,8 +30,6 @@ const MiniHomp = ({ children, onClose }) => {
         },
       });
 
-      console.log('서버 응답:', response.data); // 서버 응답 확인
-
       if (response.data.url) {
         // url 키를 사용
         setProfileImage(response.data.url); // 상태 업데이트
