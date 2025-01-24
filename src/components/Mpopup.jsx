@@ -13,6 +13,7 @@ const Mpopup = ({
   variant = 'default',
   onClose,
   onNameChange = () => {},
+  onImageUpload = () => {},
 }) => {
   const styles = {
     subscribe: `w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)]`,
@@ -117,6 +118,8 @@ const Mpopup = ({
 
       if (response.data.profile_img_url) {
         setProfileImageUrl(response.data.profile_img_url); // 상태 업데이트
+        alert('프로필 이미지가 성공적으로 업로드되었습니다.');
+        onImageUpload(response.data.profile_img_url);
         alert('프로필 이미지가 성공적으로 업로드되었습니다.');
       } else {
         alert('프로필 이미지 업로드에 실패했습니다. 다시 시도하세요.');
