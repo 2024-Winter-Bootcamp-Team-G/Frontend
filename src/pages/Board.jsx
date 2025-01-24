@@ -1,15 +1,38 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Background from '../components/Background';
 import MiniHomp from '../components/MiniHomp';
 import Mbutton from '../components/Mbutton';
 import Retry from '../assets/retry.png';
 import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
-import { getCookie } from '../utils/cookie';
+import { getCookie, setCookie } from '../utils/cookie';
 
 const Board = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [isWindowOpen, setIsWindowOpen] = useState(true);
+
+  // url에서 data_id 뽑아서 쿠키에 저장
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const dataId = queryParams.get('data_id');
+
+    // 현재 쿠키의 data_id 값 확인
+    const existingDataId = getCookie('data_id');
+
+    // URL에서 가져온 data_id가 있고, 현재 쿠키와 다른 경우에만 저장
+    if (dataId && dataId !== existingDataId) {
+      setCookie('data_id', dataId, {
+        path: '/',
+        secure: true,
+        sameSite: 'Strict',
+        expires: new Date(Date.now() + 3600000), // 현재 시간 기준으로 1시간 후 만료
+      });
+      console.log('새로운 data_id가 쿠키에 저장되었습니다:', dataId);
+    } else {
+      console.log('data_id가 이미 쿠키에 저장되어 있습니다:', existingDataId);
+    }
+  }, [location, navigate]);
 
   // 공유하기 버튼 함수
   const shareBoard = async () => {
@@ -123,6 +146,12 @@ const Board = () => {
                 className="absolute w-[7rem] h-[2.7rem] mt-2"
                 variant="edit"
                 onClick={shareBoard}
+              />
+              <Mbutton
+                text="스크린샷"
+                className="absolute w-[7rem] h-[2.7rem] mt-2"
+                variant="edit"
+                onClick={() => {}}
               />
             </div>
 
