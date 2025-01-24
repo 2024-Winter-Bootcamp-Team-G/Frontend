@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import youtubeImage from '../assets/youtube_icon.png';
@@ -23,6 +23,13 @@ const Mpopup = ({
   };
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [channels, setChannels] = useState([]); // 구독 채널 목록 상태 추가
+  const [selectedChannels, setSelectedChannels] = useState([]);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
+  const [file, setFile] = useState(null); // 실제 파일 저장 상태
+  const [profileImageUrl, setProfileImageUrl] = useState(null); // 서버에서 받은 프로필 이미지 URL
 
   const handleGoogleLogin = async () => {
     try {
@@ -35,7 +42,6 @@ const Mpopup = ({
   };
 
   const createBoard = async () => {
-    const channelIds = ['UCs7Bw5CQK82AHhyMQ59NZWA'];
     const access_token = getCookie('access_token');
 
     if (!access_token) {
@@ -44,18 +50,28 @@ const Mpopup = ({
       return;
     }
 
-    try {
-      setIsLoading(true); // 로딩 시작
+    if (selectedChannels.length === 0) {
+      alert('채널을 선택하세요.');
+      return;
+    }
 
-      const response = await api.post('/boards', null, {
-        params: {
-          channel_ids: channelIds.join(','), // 채널 ID 배열 전달
-        },
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-        timeout: 30000, // 30초 타임아웃 설정
-      });
+    console.log('선택된 채널 ID:', selectedChannels);
+
+    try {
+      setIsLoading(true);
+
+      // URL에 채널 ID를 추가하는 방식
+      const channelQuery = selectedChannels
+        .map((id) => `channel_ids=${id}`)
+        .join('&');
+      const response = await api.post(
+        `/boards?${channelQuery}`,
+        null, // POST 요청의 body는 비워둠
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+          timeout: 120000, // 요청 타임아웃을 120초로 설정
+        }
+      );
 
       if (response.status === 200) {
         console.log(response.data.message); // "보드가 성공적으로 생성되었습니다."
@@ -66,11 +82,12 @@ const Mpopup = ({
           path: '/',
           secure: true,
           sameSite: 'Strict',
-          expires: 7,
+          expires: 7, // 7일 후 만료
         });
 
         alert('보드가 성공적으로 생성되었습니다.');
-        onClose(); // 채널 선택 팝업 닫기
+        onClose(true); // 채널 선택 팝업 닫기
+        navigate(`/board/${boardId}`);
       }
     } catch (error) {
       if (error.code === 'ECONNABORTED') {
@@ -79,10 +96,7 @@ const Mpopup = ({
         console.error('보드 생성 실패:', error.response?.data || error.message);
 
         if (error.response?.data?.detail) {
-          const errorMessage = Array.isArray(error.response.data.detail)
-            ? error.response.data.detail.join(', ')
-            : error.response.data.detail;
-          alert(`보드 생성에 실패했습니다: ${errorMessage}`);
+          alert('보드 생성에 실패했습니다');
         } else {
           alert('보드 생성에 실패했습니다: 알 수 없는 오류가 발생했습니다.');
         }
@@ -92,14 +106,49 @@ const Mpopup = ({
     }
   };
 
-  const handleSubscribeClick = () => {};
-  const handleYouLoginClick = () => {};
+  // API 호출하여 구독 채널 목록 가져오기
+  const fetchChannels = async () => {
+    const dataId = getCookie('data_id');
+    if (!dataId) {
+      console.error('data_id를 찾을 수 없습니다.');
+      return;
+    }
 
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
-  const [file, setFile] = useState(null); // 실제 파일 저장 상태
-  const [profileImageUrl, setProfileImageUrl] = useState(null); // 서버에서 받은 프로필 이미지 URL
+    setIsLoading(true);
+    try {
+      const response = await api.get('/preferences/channel-collect', {
+        params: { data_id: dataId },
+      });
+      if (response.status === 200 && response.data.result) {
+        setChannels(response.data.result);
+      } else {
+        console.error('채널 목록을 가져오지 못했습니다.');
+      }
+    } catch (error) {
+      console.error('채널 목록 가져오기 오류:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (variant === 'subscribe') {
+      fetchChannels();
+    }
+  }, [variant]);
+
+  const handleCheckbox = (channelId) => {
+    setSelectedChannels((prev) => {
+      if (prev.includes(channelId)) {
+        return prev.filter((id) => id !== channelId);
+      }
+      if (prev.length < 10) {
+        return [...prev, channelId];
+      }
+      alert('최대 10개의 채널만 선택할 수 있습니다.');
+      return prev;
+    });
+  };
 
   // 프로필 이미지 업로드
   const handleProfileImageUpload = async () => {
@@ -221,25 +270,28 @@ const Mpopup = ({
             <div className="absolute right-[1.5%] top-[20%] w-[850px] h-[300px] overflow-y-scroll scrollbar-thumb scrollbar-track">
               <div className="h-[1500px] w-full p-3 flex flex-col gap-8">
                 {/* 체크박스 목록 */}
-                {[...Array(20)].map((_, index) => (
-                  <label key={index} className="flex items-center gap-3">
+                {channels.map((channel) => (
+                  <label
+                    key={channel['채널ID']}
+                    className="flex items-center gap-3"
+                  >
                     <input
                       type="checkbox"
+                      checked={selectedChannels.includes(channel['채널ID'])}
+                      onChange={() => handleCheckbox(channel['채널ID'])}
                       className="w-8 h-8 bg-white cursor-pointer accent-[#0000aa]"
                       style={{
                         boxShadow:
                           '1px 1px 0px 0px #808080 inset, -2px -2px 0px 0px #DFDFDF inset, 2px 2px 0px 0px #000 inset',
                       }}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          console.log(`체크박스 ${index + 1} 선택됨`);
-                        } else {
-                          console.log(`체크박스 ${index + 1} 해제됨`);
-                        }
-                      }}
+                    />
+                    <img
+                      src={channel['채널이미지']}
+                      alt={channel['채널이름']}
+                      className="w-10 h-10 object-cover rounded"
                     />
                     <span className="text-black text-[18px]">
-                      항목 {index + 1}
+                      {channel['채널이름']}
                     </span>
                   </label>
                 ))}

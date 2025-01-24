@@ -15,9 +15,22 @@ const MiniHomp = ({ children, onClose }) => {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [username, setUsername] = useState(''); // 이름 상태 추가
 
+  // board_id를 쿠키에서 가져오기
+  const boardId = getCookie('board_id');
+
+  // 보드판 버튼 클릭 핸들러
+  const handleBoardButtonClick = () => {
+    if (boardId) {
+      navigate(`/board/${boardId}`); // board_id가 있으면 보드 상세 페이지로 이동
+    } else {
+      navigate('/board'); // board_id가 없으면 기본 보드 페이지로 이동
+    }
+  };
+
+  // buttons 배열
   const buttons = [
     { name: '홈', path: '/homep' },
-    { name: '보드판', path: '/board' },
+    { name: '보드판', onClick: handleBoardButtonClick }, // 보드판 버튼에 클릭 핸들러 추가
     { name: '게시판', path: '/notice' },
   ];
 
@@ -85,7 +98,21 @@ const MiniHomp = ({ children, onClose }) => {
   }, [username]);
 
   const handleButtonClick = (variant) => {
-    setPopupVariant(variant); // 팝업의 variant 설정
+    if (variant === 'profile') {
+      setPopupVariant('profile'); // variant가 'profile'이면 'profile'로 설정
+    } else {
+      const dataId = getCookie('data_id'); // 쿠키에서 data_id 가져오기
+
+      if (!dataId) {
+        // data_id가 없거나 유효기간이 지난 경우
+        console.log('data_id가 없거나 유효기간이 지났습니다.');
+        setPopupVariant('youlogin'); // 'youlogin' 팝업 표시
+      } else {
+        // data_id가 유효한 경우
+        console.log('data_id가 유효합니다.');
+        setPopupVariant('subscribe'); // 'subscribe' 팝업 표시
+      }
+    }
   };
 
   const closePopup = () => {
@@ -253,13 +280,17 @@ const MiniHomp = ({ children, onClose }) => {
                   <div className="absolute top-[15%] right-[-35px] flex flex-col">
                     {buttons.map((button) => (
                       <button
-                        key={button.path}
+                        key={button.name}
                         className={`w-[90px] h-[60px] border-y-[5px] border-r-[5px] border-black text-black text-[20px] mr-[-55px] rounded-r-xl ${
-                          location.pathname === button.path
+                          location.pathname === button.path ||
+                          (button.name === '보드판' &&
+                            location.pathname.startsWith('/board'))
                             ? 'bg-white' // 현재 경로면 흰색
                             : 'bg-[#238BA7]'
                         }`}
-                        onClick={() => navigate(button.path)}
+                        onClick={
+                          button.onClick || (() => navigate(button.path))
+                        }
                       >
                         {button.name}
                       </button>

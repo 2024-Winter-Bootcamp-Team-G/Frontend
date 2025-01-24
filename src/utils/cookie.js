@@ -51,17 +51,23 @@ export const setCookie = (name, value, options = {}) => {
 /**
  * 쿠키 가져오기 함수: 쿠키 안에 내용을 읽을 때 사용!
  * @param {string} name - 가져올 쿠키의 이름
- * @returns {string|null} - 쿠키 값 또는 null
+ * @returns {string|null} - 쿠키 값 또는 null (유효기간이 지난 경우 null 반환)
  */
 export const getCookie = (name) => {
   const cookies = document.cookie.split('; ');
   for (let cookie of cookies) {
     const [cookieName, cookieValue] = cookie.split('=');
     if (decodeURIComponent(cookieName) === name) {
-      return decodeURIComponent(cookieValue);
+      // expires 필드 확인
+      const expires = cookie.split('expires=')[1]?.split(';')[0];
+      if (expires && new Date(expires) < new Date()) {
+        console.log('쿠키 유효기간이 지났습니다.');
+        return null; // 유효기간이 지난 경우 null 반환
+      }
+      return decodeURIComponent(cookieValue); // 유효한 쿠키 값 반환
     }
   }
-  return null;
+  return null; // 쿠키가 없는 경우 null 반환
 };
 
 /**
