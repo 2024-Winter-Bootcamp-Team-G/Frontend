@@ -71,16 +71,21 @@ const Board = () => {
     };
 
     return (
-      <img
-        src={Retry}
-        alt="retry"
-        className="w-6 h-6 cursor-pointer"
+      <button
+        type="button" // 버튼 타입 지정 (기본값은 "submit"이므로 명시적으로 "button"으로 설정)
+        className="w-6 h-6 cursor-pointer focus:outline-none"
         style={{
           transform: `rotate(${rotateDegree}deg)`,
           transition: 'transform 0.5s ease',
         }}
         onClick={handleClick}
-      />
+      >
+        <img
+          src={Retry}
+          alt="retry"
+          className="w-full h-full" // 이미지 크기를 버튼에 맞춤
+        />
+      </button>
     );
   };
 
