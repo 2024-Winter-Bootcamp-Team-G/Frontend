@@ -5,15 +5,45 @@ import ShareIcon from '../assets/algo.png';
 import RadarChartComponent from '../components/RadarChartComponent';
 import VennDiagram from '../components/VennDiagram';
 import Select from '../components/Select';
+import api from '../api/axios_config'; // API 모듈 import
+import { getCookie } from '../utils/cookie'; // 쿠키 유틸리티 import
 
 const Share = ({ onClose }) => {
   const [isSelectionComplete, setIsSelectionComplete] = useState(false); // 선택창 완료 상태
   const [selectedValue, setSelectedValue] = useState(''); // 선택창에서 입력된 값
+  const [matchData, setMatchData] = useState(null);
 
+  // 목데이터
+  const mockData = {
+    board_id1: 1,
+    board_id2: 2,
+  };
   // 선택창 완료 시 호출되는 함수
-  const handleSelectionComplete = (value) => {
-    setSelectedValue(value);
+  const handleSelectionComplete = async (selectedBoard) => {
+    setSelectedValue(selectedBoard);
     setIsSelectionComplete(true);
+
+    try {
+      // API 호출로 데이터 가져오기
+      const response = await api.post('/boards/match-ratio', null, {
+        params: {
+          board_id1: selectedBoard, // B가 선택한 보드 ID
+          board_id2: getCookie('board_id'), // A의 보드 ID (쿠키에서 가져옴)
+        },
+        headers: {
+          Authorization: `Bearer ${getCookie('access_token')}`, // 인증 토큰
+        },
+      });
+
+      if (response.status === 200) {
+        // API 응답 데이터가 있으면 사용, 없으면 목데이터 사용
+        setMatchData(response.data.match_ratio.result || mockData);
+      }
+    } catch (error) {
+      console.error('일치율 조회 실패:', error);
+      alert('일치율 조회에 실패했습니다. 목데이터를 사용합니다.');
+      setMatchData(mockData); // API 호출 실패 시 목데이터 사용
+    }
   };
 
   return (
@@ -46,18 +76,17 @@ const Share = ({ onClose }) => {
           </div>
 
           {/* Share 아이콘 및 텍스트 */}
-          <div className="relative top-[1rem] -left-5">
+          <div className="relative top-[2rem] -left-5">
             <img src={ShareIcon} alt="share" className="w-40 h-40" />
           </div>
-          <p className="relative -top-[5rem] left-[6.5rem] text-black text-2xl">
+          <p className="relative -top-[4rem] left-[6.5rem] text-black text-2xl">
             A님과 B님의 알고리즘 일치율
           </p>
-          <p className="absolute top-[8.5rem] left-[6.5rem]">
+          <p className="absolute top-[10.5rem] left-[6.5rem] text-xl">
             해당 페이지에서는 두 분의 알고리즘에 대한 분석을 확인해볼 수
             있습니다.
             <br />
-            <br />
-            차트를 클릭하시면 보다 세부적인 내용 확인이 가능합니다.
+            차트에 마우스를 가져다대면 보다 세부적인 내용 확인이 가능합니다.
           </p>
 
           {/* A님과 B님의 색상 표시 */}
@@ -71,14 +100,25 @@ const Share = ({ onClose }) => {
           </p>
 
           {/* Radar 차트 및 카테고리별 비율 텍스트 */}
-          <div className="relative -top-[6.5rem] left-[19rem] w-full h-[55vh]">
+          <div className="relative -top-[5.5rem] left-[23rem] w-full h-[55vh]">
             <p className="text-center text-[#3E3E3E] text-xl mb-4">
               [각 카테고리별 비율]
             </p>
-            <RadarChartComponent />
+            <RadarChartComponent data={matchData} />
           </div>
+
+          {/* VennDiagram 렌더링 */}
           <div className="absolute top-[40%] left-10 w-[46%] aspect-[2/1]">
-            <VennDiagram />
+            {matchData ? (
+              <VennDiagram
+                matchRatio={matchData.total_match_rate[0]}
+                user1Keywords={matchData.user1_keywords}
+                user2Keywords={matchData.user2_keywords}
+                matchKeywords={matchData.match_keywords}
+              />
+            ) : (
+              <p>데이터를 불러오는 중입니다...</p>
+            )}
           </div>
         </div>
       )}

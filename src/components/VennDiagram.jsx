@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 
-const VennDiagram = () => {
-  const overlap = 30; // 겹치는 정도 (%).
+const VennDiagram = ({
+  matchRatio,
+  user1Keywords,
+  user2Keywords,
+  matchKeywords,
+}) => {
+  const overlap = matchRatio; // API에서 받은 일치율
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0 });
 
   // 겹치는 영역 크기와 위치 계산
@@ -51,20 +56,27 @@ const VennDiagram = () => {
       case 'match':
         return {
           title: '일치 알고리즘',
-          category: '음악, 예술',
-          keyword: '창의성, 감성',
+          category: matchKeywords.join(', '), // 일치하는 키워드
+          keyword: '공통 키워드', // 추가 설명
         };
       case 'left-unmatch':
+        // User1의 키워드에서 matchKeywords 제거
+        const leftUnmatchedKeywords = Object.values(user1Keywords)
+          .flat()
+          .filter((keyword) => !matchKeywords.includes(keyword));
         return {
           title: '불일치 알고리즘',
-          category: '문학, 역사',
-          keyword: '감성, 서사',
+          category: leftUnmatchedKeywords.join(', '),
+          keyword: 'User1의 키워드', // 추가 설명
         };
       case 'right-unmatch':
+        const rightUnmatchedKeywords = Object.values(user2Keywords)
+          .flat()
+          .filter((keyword) => !matchKeywords.includes(keyword));
         return {
           title: '불일치 알고리즘',
-          category: '공학, 수학',
-          keyword: '논리, 분석',
+          category: rightUnmatchedKeywords.join(', '),
+          keyword: 'User2의 키워드', // 추가 설명
         };
       default:
         return { title: '', category: '', keyword: '' };
@@ -77,14 +89,14 @@ const VennDiagram = () => {
     <div className="relative w-full h-full flex items-center justify-center">
       {/* 일치율 텍스트 */}
       <div className="absolute top-[-2rem] left-1/2 transform -translate-x-1/2 text-black text-2xl">
-        일치율: {overlap}%
+        일치율: {matchRatio}%
       </div>
 
       {/* 첫 번째 원 */}
       <div
         className="absolute w-[50%] aspect-square rounded-full transition-all duration-300"
         style={{
-          left: `${0 + (overlap / 100) * 25}%`,
+          left: `${0 + (matchRatio / 100) * 25}%`,
           backgroundColor: '#ed8b67',
           opacity: 0.5,
         }}
@@ -94,7 +106,7 @@ const VennDiagram = () => {
       <div
         className="absolute w-[50%] aspect-square rounded-full transition-all duration-300"
         style={{
-          left: `${50 - (overlap / 100) * 25}%`,
+          left: `${50 - (matchRatio / 100) * 25}%`,
           backgroundColor: '#36abd1',
           opacity: 0.5,
         }}

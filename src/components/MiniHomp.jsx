@@ -68,6 +68,11 @@ const MiniHomp = ({ children, onClose }) => {
     setUsername(newName); // 상태 업데이트
   };
 
+  // 이미지 업로드 후 콜백 함수
+  const handleImageUpload = (newImageUrl) => {
+    setProfileImage(newImageUrl); // 새로운 이미지 URL로 상태 업데이트
+  };
+
   // 컴포넌트가 마운트될 때 프로필 이미지와 이름 가져오기
   useEffect(() => {
     fetchProfileImage();
@@ -106,6 +111,7 @@ const MiniHomp = ({ children, onClose }) => {
             variant={popupVariant}
             onClose={closePopup}
             onNameChange={handleNameChange}
+            onImageUpload={handleImageUpload}
           />
         </div>
       )}
