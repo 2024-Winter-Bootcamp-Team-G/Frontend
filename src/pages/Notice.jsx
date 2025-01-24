@@ -68,7 +68,7 @@ const Notice = () => {
                     <div
                       key={board.id}
                       className="text-2xl text-left text-black mx-3 my-8 border-b border-[#b4b4b4]"
-                      onClick={() => handleBoardClick()}
+                      onClick={() => handleBoardClick(board.id)}
                     >
                       {`${index + 1}. ${new Date(board.created_at).toLocaleDateString()} ${board.board_name}`}
                     </div>
