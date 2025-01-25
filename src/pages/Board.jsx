@@ -143,7 +143,7 @@ const Board = () => {
   const {
     board_name,
     image_url,
-    category_ratio: ratios,
+    category_ratio: ratiosArray, // 배열로 받음
     keywords,
   } = board || {
     board_name: '현재 보드판이 비어 있습니다.',
@@ -152,9 +152,33 @@ const Board = () => {
     keywords: {},
   };
 
+  // 카테고리 이름 배열 (백엔드에서 제공된 순서대로)
+  const categoryNames = Object.keys(keywords);
+
+  // 카테고리 이름과 비율을 매핑한 객체 생성
+  const ratios = categoryNames.reduce((acc, category, index) => {
+    acc[category] = ratiosArray[index]; // 배열의 인덱스에 해당하는 비율을 할당
+    return acc;
+  }, {});
+
+  // 카테고리를 비율에 따라 정렬
   const sortedCategories = Object.keys(ratios).sort(
     (a, b) => ratios[b] - ratios[a]
   );
+
+  // 키워드를 포맷팅하는 함수
+  const formatKeywords = (keywords) => {
+    if (!keywords || keywords.length === 0) return null;
+
+    return keywords.slice(0, 3).map((keyword, index) => (
+      <div key={index}>
+        {index === 0 && '① '}
+        {index === 1 && '② '}
+        {index === 2 && '③ '}
+        {keyword}
+      </div>
+    ));
+  };
 
   return (
     <Background>
@@ -174,7 +198,10 @@ const Board = () => {
             <div className="relative flex flex-col">
               {/* 이미지 컨테이너 */}
               <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-square">
-                <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center"></div>
+                <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center">
+                  {/* Retry 아이콘 */}
+                  <RotatingIcon />
+                </div>
                 {image_url && (
                   <img
                     src={image_url}
@@ -207,17 +234,17 @@ const Board = () => {
               {/* 3등 컨테이너 */}
               <div className="relative w-[92%] h-[41%] bg-[#aedcea] rounded-[1.25rem] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[1.25rem] border-[0.1875rem] border-dashed border-white flex justify-center">
-                  {/* 3등 컨테이너 텍스트 */}
+                  {/* 카테고리 텍스트 */}
                   {sortedCategories[2] && (
-                    <span className="text-black text-2xl p-2">
+                    <span className="text-black text-xl p-2">
                       {sortedCategories[2]} {ratios[sortedCategories[2]]}%
                     </span>
                   )}
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
-                  {/* 숫자들 (왼쪽 정렬) */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-xl font-normal text-left transform -translate-y-1/2">
-                    ①<br />②<br />③
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                    {formatKeywords(keywords[sortedCategories[2]])}
                   </div>
                 </div>
               </div>
@@ -225,17 +252,17 @@ const Board = () => {
               {/* 2등 컨테이너 */}
               <div className="relative mt-[3%] w-[92%] h-[56%] bg-[#4cb2d2] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
-                  {/* 2등 컨테이너 텍스트 */}
+                  {/* 카테고리 텍스트 */}
                   {sortedCategories[1] && (
-                    <span className="text-black text-2xl p-2">
+                    <span className="text-black text-xl p-2">
                       {sortedCategories[1]} {ratios[sortedCategories[1]]}%
                     </span>
                   )}
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
-                  {/* 숫자들 (왼쪽 정렬) */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-xl font-normal text-left transform -translate-y-1/2">
-                    ①<br />②<br />③
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                    {formatKeywords(keywords[sortedCategories[1]])}
                   </div>
                 </div>
               </div>
@@ -245,17 +272,17 @@ const Board = () => {
               {/* 1등 컨테이너 */}
               <div className="relative mb-[3%] w-[95%] h-[60%] bg-[#79c6de] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[5px] left-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
-                  {/* 1등 컨테이너 텍스트 */}
+                  {/* 카테고리 텍스트 */}
                   {sortedCategories[0] && (
-                    <span className="text-black text-2xl p-2">
+                    <span className="text-black text-xl p-2">
                       {sortedCategories[0]} {ratios[sortedCategories[0]]}%
                     </span>
                   )}
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
-                  {/* 숫자들 (왼쪽 정렬) */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-xl font-normal text-left transform -translate-y-1/2">
-                    ①<br />②<br />③
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                    {formatKeywords(keywords[sortedCategories[0]])}
                   </div>
                 </div>
               </div>
@@ -263,17 +290,17 @@ const Board = () => {
               {/* 4등 컨테이너 */}
               <div className="relative w-[95%] h-[37%] bg-[#c3dee7] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[5px] left-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
-                  {/* 4등 컨테이너 텍스트 */}
+                  {/* 카테고리 텍스트 */}
                   {sortedCategories[3] && (
-                    <span className="text-black text-2xl p-2">
+                    <span className="text-black text-xl p-2">
                       {sortedCategories[3]} {ratios[sortedCategories[3]]}%
                     </span>
                   )}
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
-                  {/* 숫자들 (왼쪽 정렬) */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-xl font-normal text-left transform -translate-y-1/2">
-                    ①<br />②<br />③
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                    {formatKeywords(keywords[sortedCategories[3]])}
                   </div>
                 </div>
               </div>
