@@ -7,7 +7,6 @@ import Loading from './Loading';
 import api from '../api/axios_config';
 import { BASE_URL } from '../api/axios_config';
 import { getCookie, setCookie } from '../utils/cookie'; // 쿠키 함수 import
-import { getBoards } from '../api/board';
 
 const Mpopup = ({
   className,
@@ -78,18 +77,17 @@ const Mpopup = ({
         console.log(response.data.message); // "보드가 성공적으로 생성되었습니다."
         const boardId = response.data.result.board.id;
 
-        // 모든 보드 목록 가져오기
-        const boardsData = await getBoards();
+        // 방금 생성한 보드 번호 쿠키에 저장
+        setCookie('board_id', boardId, {
+          path: '/',
+          secure: true,
+          sameSite: 'Strict',
+          expires: 7, // 7일 후 만료
+        });
 
-        if (boardsData.status === 200 && boardsData.data.result) {
-          const boards = boardsData.data.result.board;
-          const latestBoard = boards[boards.length - 1]; // 가장 최근 보드
-          alert('보드가 성공적으로 생성되었습니다.');
-          onClose(true); // 팝업 닫기
-          navigate(`/board/${latestBoard.id}`); // 최신 보드로 이동
-        } else {
-          alert('보드를 가져오지 못했습니다. 다시 시도하세요.');
-        }
+        alert('보드가 성공적으로 생성되었습니다.');
+        onClose(true); // 채널 선택 팝업 닫기
+        navigate(`/board/${boardId}`);
       }
     } catch (error) {
       if (error.code === 'ECONNABORTED') {

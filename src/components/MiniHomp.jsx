@@ -280,7 +280,7 @@ const MiniHomp = ({ children, onClose }) => {
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
                 <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative">
-                  <div className="absolute inset-0 flex flex-col w-full h-full px-4">
+                  <div className="absolute inset-0 flex flex-col w-full h-full px-4 overflow-y-auto scrollbar-hide">
                     {children}
                   </div>
                   {/* 버튼 그룹 */}
