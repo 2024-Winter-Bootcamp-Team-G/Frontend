@@ -6,6 +6,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import api from '../api/axios_config';
 import { setCookie } from '../utils/cookie';
+import Logo from '../assets/logo.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -65,8 +66,13 @@ const Login = () => {
               boxShadow: 'inset -3px -3px 0px #FFF, inset 3px 3px 0px #808080',
             }}
           >
-            <p className="text-gray-500 text-center text-[1rem]">
-              여기에 이미지를 추가하세요.
+            <img
+              src={Logo}
+              alt="login_logo"
+              className="relative bottom-[2rem] left-[8rem]"
+            />
+            <p className="relative -bottom-[11rem] -left-[8rem] text-black text-[4rem]">
+              Algo.com
             </p>
           </div>
           <div className="w-[60%]">

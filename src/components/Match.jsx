@@ -15,30 +15,12 @@ const Match = ({ onClose }) => {
         </h2>
 
         {/* 메인 창 */}
-        <div className="relative w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)] z-10">
+        <div className="w-[889px] h-[506px] bg-[#c3c7cb] shadow-[5px_5px_0px_1px_rgba(0,0,0,0.90),inset_8px_8px_0px_0px_rgba(255,255,255,0.90)] relative z-10">
           {/* 텍스트를 하단에 배치 */}
           <p className="absolute bottom-[6rem] left-[2.5rem] text-black text-lg">
             유효코드를 입력하신 후 완료버튼을 누르면 <br /> 알고리즘 일치율
             보드판을 보실 수 있습니다.
           </p>
-
-          {/* 오른쪽 입력 칸 */}
-          <div className="absolute top-[3rem] right-[2rem] w-[300px] h-[400px] bg-white shadow-[4px_4px_4px_0px_rgba(255,255,255,1.00),inset_0px_-4px_4px_0px_rgba(0,0,0,0.25)] border-2 border-[#868a8e] z-[999]">
-            {/* 입력 칸 내용 */}
-            <div className="p-4">
-              <h3 className="text-black text-xl font-bold mb-4">
-                유효코드 입력
-              </h3>
-              <input
-                type="text"
-                placeholder="유효코드를 입력하세요"
-                className="w-full p-2 border border-[#868a8e] rounded-md mb-4"
-              />
-              <button className="w-full bg-[#0000aa] text-white py-2 rounded-md">
-                완료
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* 닫기 버튼 */}
