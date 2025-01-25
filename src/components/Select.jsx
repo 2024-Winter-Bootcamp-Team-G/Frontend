@@ -7,6 +7,7 @@ const Select = ({ onComplete }) => {
 
   // 보드 선택 함수
   const handleSelectBoard = (index) => {
+    console.log('Selected Board Index:', index); // 선택된 보드 인덱스 확인
     setSelectedBoard(index); // 선택된 보드 ID 설정
   };
 
@@ -36,10 +37,9 @@ const Select = ({ onComplete }) => {
             {[...Array(20)].map((_, index) => (
               <div
                 key={index}
-                className={`w-[80%] h-[50px] bg-white border border-[#c3c7cb] flex items-center justify-center
+                className={`w-[80%] h-[50px] ${selectedBoard === index ? '!bg-[#b3e5fc] !border-[#0000aa] !border-2' : 'bg-white border border-[#c3c7cb]'} flex items-center justify-center
                           shadow-[inset_4px_4px_0px_0px_rgba(0,0,0,0.50)]
-                          cursor-pointer
-                          ${selectedBoard === index ? 'bg-[#b3e5fc] border-[#0000aa] border-2' : ''}`}
+                          cursor-pointer`}
                 onClick={() => handleSelectBoard(index)} // 보드 선택
               >
                 {/* 보드 이름 표시 (예시로 번호) */}
