@@ -23,7 +23,7 @@ export const getBoards = async () => {
 export const getBoardDetail = async (boardId) => {
   try {
     const response = await api.get(`/boards/${boardId}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('보드 상세 정보 가져오기 실패:', error);
     throw error;

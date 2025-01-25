@@ -7,9 +7,13 @@ const Mbutton = ({
   variant = 'default',
   text = '정보수정',
 }) => {
+  // 공통 스타일
+  const baseStyle = `bg-white rounded-[10px] border-2 border-[#919191] relative shadow-[2px_3px_0px_0px_rgba(0,0,0,0.25)] before:absolute before:inset-0 before:rounded-[10px] before:shadow-[inset_4px_4px_2px_0px_rgba(255,255,255,0.25)] cursor-pointer
+    active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`;
+
   const styles = {
-    edit: `w-[119px] h-[49px] bg-white rounded-[10px] border-2 border-[#919191] relative shadow-[2px_3px_0px_0px_rgba(0,0,0,0.25)] before:absolute before:inset-0 before:rounded-[10px] before:shadow-[inset_4px_4px_2px_0px_rgba(255,255,255,0.25)] cursor-pointer
-active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`,
+    edit: `w-[115px] h-[47px] ${baseStyle}`,
+    board: `w-[7rem] h-[3rem] max-w-[60%] max-h-[15%] ${baseStyle}`,
     create: `max-w-[262px] h-[50px] bg-[#BFCFEF] border-4 border-[#5C5C5C]/70 flex items-center justify-center pr-9 truncate relative`,
   };
 
@@ -17,12 +21,9 @@ active:shadow-[inset_3px_3px_1px_0px_rgba(0,0,0,0.25)]`,
   const buttonStyle = styles[variant] || styles.default;
 
   return (
-    <div
-      className={`${buttonStyle} ${className} transition-all duration-100`}
-      // 큰 사각형의 onClick 이벤트 제거
-    >
+    <div className={`${buttonStyle} ${className} transition-all duration-100`}>
       {/* edit 버튼의 글자 */}
-      {variant === 'edit' && (
+      {(variant === 'edit' || variant === 'board') && (
         <>
           <button
             className="absolute inset-0 rounded-[10px] cursor-pointer flex items-center justify-center text-black

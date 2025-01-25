@@ -21,7 +21,7 @@ const MiniH = () => {
       {isWindowOpen && ( // isWindowOpen이 true일 때만 창을 렌더링
         <MiniHomp onClose={handleCloseWindow}>
           {/* 제목 */}
-          <div className="overflow-y-auto scrollbar-hide px-8">
+          <div className="px-8">
             <div className="text-[#79C6DE] ml-4 text-left mt-7 text-[2rem]">
               How to use?
             </div>
