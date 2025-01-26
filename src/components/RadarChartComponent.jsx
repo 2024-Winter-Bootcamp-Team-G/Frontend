@@ -22,7 +22,10 @@ ChartJS.register(
 );
 
 const RadarChartComponent = () => {
-  const [chartData, setChartData] = useState(null);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,30 +38,38 @@ const RadarChartComponent = () => {
         });
         console.log('API 응답 데이터:', response.data); // 응답 데이터 확인
 
-        const { board1_category_ratio, board2_category_ratio } = response.data;
+        const { board1_category_ratio, board2_category_ratio, match_ratio } =
+          response.data;
+        const { user1_category, user2_category } = match_ratio.result;
 
-        // 카테고리 이름 배열 (예시로 임의의 이름 사용)
-        const categories = [
-          '카테고리 1',
-          '카테고리 2',
-          '카테고리 3',
-          '카테고리 4',
-        ];
+        // 카테고리 이름 배열 (user1과 user2의 카테고리를 합치고 중복 제거)
+        const categories = [...new Set([...user1_category, ...user2_category])];
+
+        // board1과 board2의 카테고리 비율을 새로운 카테고리 배열에 맞게 재조정
+        const adjustedBoard1Ratio = categories.map((category) => {
+          const index = user1_category.indexOf(category);
+          return index !== -1 ? board1_category_ratio[index] : 0;
+        });
+
+        const adjustedBoard2Ratio = categories.map((category) => {
+          const index = user2_category.indexOf(category);
+          return index !== -1 ? board2_category_ratio[index] : 0;
+        });
 
         // 레이더 차트 데이터 설정
         setChartData({
           labels: categories, // 카테고리 이름
           datasets: [
             {
-              label: '보드 1',
-              data: board1_category_ratio, // 보드 1의 카테고리별 비율
+              label: '나',
+              data: adjustedBoard1Ratio, // 보드 1의 카테고리별 비율
               borderColor: '#ed8b67',
               backgroundColor: 'rgba(237, 139, 103, 0.5)',
               pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
             },
             {
-              label: '보드 2',
-              data: board2_category_ratio, // 보드 2의 카테고리별 비율
+              label: '친구',
+              data: adjustedBoard2Ratio, // 보드 2의 카테고리별 비율
               borderColor: '#36abd1',
               backgroundColor: 'rgba(54, 162, 235, 0.5)',
               pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
