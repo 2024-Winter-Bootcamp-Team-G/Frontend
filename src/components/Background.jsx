@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router 사용
-import startIcon from '../assets/start-icon.png';
+import endIcon from '../assets/end-icon.png';
 import loginIcon from '../assets/login-icon.svg';
 import hompIcon from '../assets/homp_icon.png';
 import matchIcon from '../assets/share.png';
@@ -69,11 +69,11 @@ const Underbar = ({ onLogout }) => {
         onClick={onLogout} // 로그아웃 함수 연결
       >
         <img
-          src={startIcon}
-          alt="Start Icon"
+          src={endIcon}
+          alt="End Icon"
           className="h-[80%] max-h-[25px] aspect-square mr-2"
         />
-        Start
+        End
       </button>
 
       {/* 시간 표시 박스 */}
