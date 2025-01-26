@@ -48,7 +48,7 @@ const Share = ({ onClose }) => {
       }
     } catch (error) {
       console.error('일치율 조회 실패:', error);
-      setError('일치율 조회에 실패했습니다. 기본 데이터를 사용합니다.');
+      setError('일치율 조회에 실패했습니다.');
       setMatchData({
         total_match_rate: [0],
         user1_keywords: [],
@@ -101,7 +101,7 @@ const Share = ({ onClose }) => {
             <img src={ShareIcon} alt="share" className="w-40 h-40" />
           </div>
           <p className="relative -top-[4rem] left-[6.5rem] text-black text-2xl">
-            A님과 B님의 알고리즘 일치율
+            우리의 알고리즘 일치율
           </p>
           <p className="absolute top-[10.5rem] left-[6.5rem] text-xl">
             해당 페이지에서는 두 분의 알고리즘에 대한 분석을 확인해볼 수
@@ -113,11 +113,11 @@ const Share = ({ onClose }) => {
           {/* A님과 B님의 색상 표시 */}
           <div className="relative -right-[53rem] -top-[6.8rem] w-[3rem] h-[1.5rem] bg-[#ed8b67] " />
           <p className="relative -top-[8.4rem] left-[57rem] text-black text-xl">
-            A님의 알고리즘
+            나의 알고리즘
           </p>
           <div className="relative -right-[53rem] -top-[7.5rem] w-[3rem] h-[1.5rem] bg-[#36abd1] " />
           <p className="relative -top-[9.1rem] left-[57rem] text-black text-xl">
-            B님의 알고리즘
+            친구의 알고리즘
           </p>
 
           {/* Radar 차트 및 카테고리별 비율 텍스트 */}

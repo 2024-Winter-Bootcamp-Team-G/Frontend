@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const VennDiagram = ({
   matchRatio = 0, // 기본값 설정
@@ -55,7 +55,7 @@ const VennDiagram = ({
     switch (type) {
       case 'match':
         return {
-          title: '일치 키워드',
+          title: '우리의 일치 키워드',
           keyword: matchKeywords.join(', ') || '없음', // 일치하는 키워드
         };
       case 'left-unmatch':
@@ -64,7 +64,7 @@ const VennDiagram = ({
           (keyword) => !matchKeywords.includes(keyword)
         );
         return {
-          title: 'User1의 키워드',
+          title: '나의 키워드',
           keyword: leftUnmatchedKeywords.join(', ') || '없음', // User1의 불일치 키워드
         };
       case 'right-unmatch':
@@ -73,7 +73,7 @@ const VennDiagram = ({
           (keyword) => !matchKeywords.includes(keyword)
         );
         return {
-          title: 'User2의 키워드',
+          title: '친구의 키워드',
           keyword: rightUnmatchedKeywords.join(', ') || '없음', // User2의 불일치 키워드
         };
       default:
@@ -82,6 +82,11 @@ const VennDiagram = ({
   };
 
   const tooltipContent = getTooltipContent(tooltip.type);
+
+  useEffect(() => {
+    console.log('user1Keywords', user1Keywords);
+    console.log('user2Keywords', user2Keywords);
+  }, [user1Keywords, user2Keywords]);
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -135,7 +140,7 @@ const VennDiagram = ({
       ></div>
 
       {/* 툴팁 */}
-      {tooltip.visible && (
+      {tooltip?.visible && (
         <div
           className="absolute w-48 p-4 bg-white border border-gray-300 rounded-lg shadow-md text-black text-sm"
           style={{
@@ -148,10 +153,10 @@ const VennDiagram = ({
           }}
         >
           <div className="text-lg font-bold mb-2 text-center">
-            {tooltipContent.title}
+            {tooltipContent?.title}
           </div>
           <ul className="list-disc list-inside">
-            <li>키워드: {tooltipContent.keyword}</li>
+            <li>키워드: {tooltipContent?.keyword}</li>
           </ul>
         </div>
       )}
