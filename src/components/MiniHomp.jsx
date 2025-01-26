@@ -6,6 +6,7 @@ import Mbutton from './Mbutton.jsx';
 import Mpopup from './Mpopup.jsx';
 import api from '../api/axios_config'; // axios 설정 파일 import
 import { getCookie } from '../utils/cookie'; // 쿠키 함수 import
+import { getBoards } from '../api/board.js';
 
 const MiniHomp = ({ children, onClose }) => {
   const navigate = useNavigate();
@@ -15,22 +16,32 @@ const MiniHomp = ({ children, onClose }) => {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [username, setUsername] = useState(''); // 이름 상태 추가
 
-  // board_id를 쿠키에서 가져오기
-  const boardId = getCookie('board_id');
+  // 보드 클릭 핸들러
+  const handleBoardClick = async () => {
+    try {
+      // 모든 보드 목록 가져오기
+      const boardsData = await getBoards();
 
-  // 보드판 버튼 클릭 핸들러
-  const handleBoardButtonClick = () => {
-    if (boardId) {
-      navigate(`/board/${boardId}`); // board_id가 있으면 보드 상세 페이지로 이동
-    } else {
-      navigate('/board'); // board_id가 없으면 기본 보드 페이지로 이동
+      if (boardsData.result?.board?.length) {
+        // 최신 보드 ID 가져오기
+        const latestBoard = boardsData.result.board.at(-1); // 배열의 마지막 요소
+        const latestBoardId = latestBoard.id;
+
+        // 최신 보드 상세 페이지로 이동
+        navigate(`/board/${latestBoardId}`);
+      } else {
+        navigate('/board');
+      }
+    } catch (error) {
+      console.error('보드 가져오기 실패:', error);
+      alert('보드 정보를 가져오는 데 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   // buttons 배열
   const buttons = [
     { name: '홈', path: '/homep' },
-    { name: '보드판', onClick: handleBoardButtonClick }, // 보드판 버튼에 클릭 핸들러 추가
+    { name: '보드판', onClick: handleBoardClick }, // 보드판 버튼에 클릭 핸들러 추가
     { name: '게시판', path: '/notice' },
   ];
 
@@ -117,10 +128,6 @@ const MiniHomp = ({ children, onClose }) => {
 
   const closePopup = () => {
     setPopupVariant(null); // 팝업 닫기
-  };
-
-  const handleMove = (x, y) => {
-    setPosition({ x, y });
   };
 
   // 오늘 날짜 가져오기
@@ -272,8 +279,8 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
-                <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative">
-                  <div className="absolute inset-0 flex flex-col w-full h-full px-4">
+                <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative minihomp-container">
+                  <div className="absolute inset-0 flex flex-col w-full h-full px-4 overflow-y-auto scrollbar-hide">
                     {children}
                   </div>
                   {/* 버튼 그룹 */}

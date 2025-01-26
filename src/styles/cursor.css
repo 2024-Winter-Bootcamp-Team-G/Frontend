@@ -1,6 +1,6 @@
 :root {
-  --default-cursor: url('./src/assets/cursor.svg'), auto;
-  --hover-cursor: url('./src/assets/pointer.svg'), pointer;
+  --default-cursor: url('../assets/cursor.svg'), auto;
+  --hover-cursor: url('../assets/pointer.svg'), pointer;
 }
 
 /* 기본 커서 */

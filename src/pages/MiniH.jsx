@@ -21,7 +21,7 @@ const MiniH = () => {
       {isWindowOpen && ( // isWindowOpen이 true일 때만 창을 렌더링
         <MiniHomp onClose={handleCloseWindow}>
           {/* 제목 */}
-          <div className="overflow-y-auto scrollbar-hide px-8">
+          <div className="px-8">
             <div className="text-[#79C6DE] ml-4 text-left mt-7 text-[2rem]">
               How to use?
             </div>
@@ -88,14 +88,14 @@ const MiniH = () => {
                 className="text-black text-[1.25rem]"
                 style={{ lineHeight: '1.5' }}
               >
-                4. 공유하기를 누르면 상대방이 알고리즘 일치율 분석보드로 이동할
-                수 있는 url이 복사됩니다.
+                4. 공유하기를 누르면 알고리즘 일치율 분석보드로 이동할 수 있는
+                코드가 복사됩니다.
                 <br />
-                해당 링크를 상대방에게 보내면 상대방이 일치율 분석보드를 확인할
-                수 있습니다.
+                해당 코드를 Match Chart에 입력하면 상대방과의 일치율 분석보드를
+                확인할 수 있습니다.
                 <br />
                 <br />
-                5. 오른쪽 하단에 start 버튼을 누르면 로그아웃됩니다.
+                5. 왼쪽 하단에 End 버튼을 누르면 로그아웃됩니다.
               </p>
             </div>
           </div>
