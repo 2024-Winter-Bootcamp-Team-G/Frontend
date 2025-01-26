@@ -49,9 +49,9 @@ const Match = ({ onClose }) => {
             보드판을 보실 수 있습니다.
           </p>
 
-          {/* 입력 칸과 완료 버튼을 포함한 컨테이너 */}
-          <div className="absolute top-[60%] right-[3rem] transform -translate-y-1/2 z-[999]">
-            <div className="flex items-center mb-6">
+          {/* 입력 칸과 오류 메시지를 포함한 컨테이너 (오른쪽 중앙에 고정) */}
+          <div className="absolute top-1/2 right-[2rem] transform -translate-y-1/2 z-[999] flex flex-col items-end">
+            <div className="flex items-center mb-6 justify-end w-full">
               <label
                 htmlFor="code"
                 className="text-[1.5rem] w-[150px] text-right mr-4"
@@ -69,12 +69,18 @@ const Match = ({ onClose }) => {
               />
             </div>
             {error && (
-              <p className="text-red-500 text-[1.5rem] mb-4">{error}</p>
+              <p className="text-red-500 text-[1.5rem] mb-4 text-right">
+                {error}
+              </p>
             )}
+          </div>
+
+          {/* 완료 버튼을 오른쪽 하단에 배치 */}
+          <div className="absolute bottom-[1.5rem] right-[1.5rem]">
             <Button
               type="popup"
               onClick={handleComplete} // 완료 버튼 클릭 시 handleComplete 실행
-              className="w-[155px] h-[46px] relative top-[8rem] left-[18.3rem]"
+              className="w-[155px] h-[46px]"
             >
               완료
             </Button>

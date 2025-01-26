@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const VennDiagram = ({
-  matchRatio,
-  user1Keywords,
-  user2Keywords,
-  matchKeywords,
+  matchRatio = 0, // 기본값 설정
+  user1Keywords = [], // 기본값 설정
+  user2Keywords = [], // 기본값 설정
+  matchKeywords = [], // 기본값 설정
 }) => {
   const overlap = matchRatio; // API에서 받은 일치율
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0 });
@@ -55,31 +55,29 @@ const VennDiagram = ({
     switch (type) {
       case 'match':
         return {
-          title: '일치 알고리즘',
-          category: matchKeywords.join(', '), // 일치하는 키워드
-          keyword: '공통 키워드', // 추가 설명
+          title: '일치 키워드',
+          keyword: matchKeywords.join(', ') || '없음', // 일치하는 키워드
         };
       case 'left-unmatch':
         // User1의 키워드에서 matchKeywords 제거
-        const leftUnmatchedKeywords = Object.values(user1Keywords)
-          .flat()
-          .filter((keyword) => !matchKeywords.includes(keyword));
+        const leftUnmatchedKeywords = user1Keywords.filter(
+          (keyword) => !matchKeywords.includes(keyword)
+        );
         return {
-          title: '불일치 알고리즘',
-          category: leftUnmatchedKeywords.join(', '),
-          keyword: 'User1의 키워드', // 추가 설명
+          title: 'User1의 키워드',
+          keyword: leftUnmatchedKeywords.join(', ') || '없음', // User1의 불일치 키워드
         };
       case 'right-unmatch':
-        const rightUnmatchedKeywords = Object.values(user2Keywords)
-          .flat()
-          .filter((keyword) => !matchKeywords.includes(keyword));
+        // User2의 키워드에서 matchKeywords 제거
+        const rightUnmatchedKeywords = user2Keywords.filter(
+          (keyword) => !matchKeywords.includes(keyword)
+        );
         return {
-          title: '불일치 알고리즘',
-          category: rightUnmatchedKeywords.join(', '),
-          keyword: 'User2의 키워드', // 추가 설명
+          title: 'User2의 키워드',
+          keyword: rightUnmatchedKeywords.join(', ') || '없음', // User2의 불일치 키워드
         };
       default:
-        return { title: '', category: '', keyword: '' };
+        return { title: '', keyword: '' };
     }
   };
 
@@ -146,14 +144,13 @@ const VennDiagram = ({
                 ? 'translate(-120%, -60%)'
                 : tooltip.type === 'right-unmatch'
                   ? 'translate(120%, -60%)'
-                  : 'translate(60%, -60%)',
+                  : 'translate(-50%, -60%)',
           }}
         >
           <div className="text-lg font-bold mb-2 text-center">
             {tooltipContent.title}
           </div>
           <ul className="list-disc list-inside">
-            <li>카테고리: {tooltipContent.category}</li>
             <li>키워드: {tooltipContent.keyword}</li>
           </ul>
         </div>

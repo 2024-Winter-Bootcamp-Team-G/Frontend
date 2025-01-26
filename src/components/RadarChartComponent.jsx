@@ -22,7 +22,10 @@ ChartJS.register(
 );
 
 const RadarChartComponent = () => {
-  const [chartData, setChartData] = useState(null);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
 
   useEffect(() => {
     const fetchData = async () => {

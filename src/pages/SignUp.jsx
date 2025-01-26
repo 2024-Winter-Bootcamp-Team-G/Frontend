@@ -5,6 +5,7 @@ import Window from '../components/Window.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
 import api from '../api/axios_config.js';
+import Logo from '../assets/logo.png';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -103,8 +104,13 @@ const SignUp = () => {
               boxShadow: 'inset -3px -3px 0px #FFF, inset 3px 3px 0px #808080',
             }}
           >
-            <p className="text-gray-500 text-center text-[1rem]">
-              이미지를 여기에 추가하세요
+            <img
+              src={Logo}
+              alt="login_logo"
+              className="relative bottom-[2rem] left-[8rem]"
+            />
+            <p className="relative -bottom-[11rem] -left-[8rem] text-black text-[4rem]">
+              Algo.com
             </p>
           </div>
           {/* 오른쪽: 회원가입 텍스트 및 입력 */}

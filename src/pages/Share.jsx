@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '../components/Button';
 import Background from '../components/Background';
 import ShareIcon from '../assets/algo.png';
@@ -11,19 +11,14 @@ import { getCookie } from '../utils/cookie'; // 쿠키 유틸리티 import
 const Share = ({ onClose }) => {
   const [isSelectionComplete, setIsSelectionComplete] = useState(false); // 선택창 완료 상태
   const [selectedValue, setSelectedValue] = useState(''); // 선택창에서 입력된 값
-  const [matchData, setMatchData] = useState(null); // API 응답 데이터
+  const [matchData, setMatchData] = useState({
+    total_match_rate: [0], // 기본값 설정
+    user1_keywords: [],
+    user2_keywords: [],
+    match_keywords: [],
+  }); // API 응답 데이터
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(''); // 오류 메시지
-
-  // 목데이터
-  const mockData = {
-    board_id1: 1,
-    board_id2: 2,
-    total_match_rate: [0.75], // 예시 데이터
-    user1_keywords: ['키워드1', '키워드2'],
-    user2_keywords: ['키워드2', '키워드3'],
-    match_keywords: ['키워드2'],
-  };
 
   // API 요청 함수
   const fetchMatchRatio = async (selectedBoard) => {
@@ -42,12 +37,24 @@ const Share = ({ onClose }) => {
       });
 
       if (response.status === 200) {
-        setMatchData(response.data.match_ratio.result || mockData);
+        setMatchData(
+          response.data.match_ratio?.result || {
+            total_match_rate: [0],
+            user1_keywords: [],
+            user2_keywords: [],
+            match_keywords: [],
+          }
+        );
       }
     } catch (error) {
       console.error('일치율 조회 실패:', error);
-      setError('일치율 조회에 실패했습니다. 목데이터를 사용합니다.');
-      setMatchData(mockData); // API 호출 실패 시 목데이터 사용
+      setError('일치율 조회에 실패했습니다. 기본 데이터를 사용합니다.');
+      setMatchData({
+        total_match_rate: [0],
+        user1_keywords: [],
+        user2_keywords: [],
+        match_keywords: [],
+      });
     } finally {
       setIsLoading(false);
     }
@@ -129,15 +136,13 @@ const Share = ({ onClose }) => {
           <div className="absolute top-[40%] left-10 w-[46%] aspect-[2/1]">
             {isLoading ? (
               <p>데이터를 불러오는 중입니다...</p>
-            ) : matchData ? (
-              <VennDiagram
-                matchRatio={matchData.total_match_rate[0]}
-                user1Keywords={matchData.user1_keywords}
-                user2Keywords={matchData.user2_keywords}
-                matchKeywords={matchData.match_keywords}
-              />
             ) : (
-              <p>데이터가 없습니다.</p>
+              <VennDiagram
+                matchRatio={matchData?.total_match_rate?.[0] || 0}
+                user1Keywords={matchData?.user1_keywords || []}
+                user2Keywords={matchData?.user2_keywords || []}
+                matchKeywords={matchData?.match_keywords || []}
+              />
             )}
           </div>
 
