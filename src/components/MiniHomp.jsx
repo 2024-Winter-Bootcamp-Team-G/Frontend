@@ -30,7 +30,7 @@ const MiniHomp = ({ children, onClose }) => {
         // 최신 보드 상세 페이지로 이동
         navigate(`/board/${latestBoardId}`);
       } else {
-        alert('생성된 보드가 없습니다.');
+        navigate('/board');
       }
     } catch (error) {
       console.error('보드 가져오기 실패:', error);
@@ -279,7 +279,7 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                 </div>
                 {/* 오른쪽 7 비율 컨테이너 */}
-                <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative">
+                <div className="flex flex-[7] rounded-[30px] bg-white border-[5px] border-black mx-1 relative minihomp-container">
                   <div className="absolute inset-0 flex flex-col w-full h-full px-4 overflow-y-auto scrollbar-hide">
                     {children}
                   </div>

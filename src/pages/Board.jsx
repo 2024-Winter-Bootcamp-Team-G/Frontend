@@ -7,6 +7,7 @@ import Retry from '../assets/retry.png';
 import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
 import { getCookie, setCookie } from '../utils/cookie';
 import { getBoardDetail, getBoards } from '../api/board';
+import html2canvas from 'html2canvas'; // html2canvas 라이브러리 import
 
 const Board = () => {
   const location = useLocation();
@@ -105,6 +106,52 @@ const Board = () => {
     }
   };
 
+  const handleScreenshot = async () => {
+    // 캡처할 div 요소 선택
+    const element = document.querySelector('.minihomp-container'); // 캡처할 div에 클래스 추가
+
+    if (!element) {
+      alert('캡처할 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    try {
+      // html2canvas로 캡처 (ignoreElements 사용)
+      const canvas = await html2canvas(element, {
+        scale: 2, // 해상도 높이기
+        useCORS: true, // CORS 문제 해결
+        allowTaint: true, // taint된 이미지 허용
+        logging: true, // 로그 출력 (디버깅용)
+        ignoreElements: (el) => {
+          // 버튼들만 캡처에서 제외
+          return el.classList.contains('screenshot-hide');
+        },
+      });
+
+      // 캡처된 이미지를 Blob으로 변환
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          try {
+            // 클립보드에 이미지 복사
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob }),
+            ]);
+            alert('스크린샷이 클립보드에 저장되었습니다!');
+          } catch (error) {
+            console.error('클립보드 복사 실패:', error);
+            alert('클립보드에 저장하는 데 실패했습니다.');
+          }
+        } else {
+          console.error('Blob 생성 실패');
+          alert('이미지를 생성하는 데 실패했습니다.');
+        }
+      }, 'image/png');
+    } catch (error) {
+      console.error('스크린샷 실패:', error);
+      alert('스크린샷을 찍는 데 실패했습니다.');
+    }
+  };
+
   // 창을 닫는 함수
   const handleCloseWindow = () => {
     console.log('창을 닫습니다.');
@@ -122,7 +169,7 @@ const Board = () => {
 
     return (
       <button
-        type="button" // 버튼 타입 지정 (기본값은 "submit"이므로 명시적으로 "button"으로 설정)
+        type="button" // 기본값은 "submit"이므로 명시적으로 "button"으로 설정
         className="w-6 h-6 cursor-pointer focus:outline-none absolute bottom-2 right-2"
         style={{
           transform: `rotate(${rotateDegree}deg)`,
@@ -212,21 +259,21 @@ const Board = () => {
               </div>
               <Mbutton
                 text="완료하기"
-                className="mt-[10%]"
+                className="mt-[10%] screenshot-hide"
                 variant="board"
                 onClick={() => navigate('/notice')} // 보드 생성 함수 호출
               />
               <Mbutton
                 text="공유하기"
-                className="mt-2"
+                className="mt-2 screenshot-hide"
                 variant="board"
                 onClick={shareBoard}
               />
               <Mbutton
                 text="스크린샷"
-                className="mt-2"
+                className="mt-2 screenshot-hide"
                 variant="board"
-                onClick={() => {}}
+                onClick={handleScreenshot}
               />
             </div>
 
@@ -243,7 +290,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
                   {/* 키워드 텍스트 */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[2]])}
                   </div>
                 </div>
@@ -261,7 +308,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
                   {/* 키워드 텍스트 */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                  <div className="absolute top-[40%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[1]])}
                   </div>
                 </div>
@@ -281,7 +328,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
                   {/* 키워드 텍스트 */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[0]])}
                   </div>
                 </div>
@@ -299,7 +346,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon />
                   {/* 키워드 텍스트 */}
-                  <div className="absolute top-[50%] left-0 pl-4 text-black text-lg font-normal text-left transform -translate-y-1/2">
+                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[3]])}
                   </div>
                 </div>
