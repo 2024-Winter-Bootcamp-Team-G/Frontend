@@ -5,6 +5,7 @@ import MiniHomp from '../components/MiniHomp';
 import BoardHelp from '../assets/board-help.svg';
 import LoginHelp from '../assets/login-help.svg';
 import SubHelp from '../assets/sub-help.svg';
+import BoardEx from '../assets/boardhome.png';
 
 const MiniH = () => {
   const navigate = useNavigate();
@@ -76,11 +77,16 @@ const MiniH = () => {
                 3. 보드판에 보드가 생성됩니다.
               </div>
             </div>
-            <div className="flex mt-3 items-center ml-1 ">
+            <div className="flex flex-col md:flex-row mt-3 items-center mx-12 gap-56 justify-center">
               <img
                 src={SubHelp}
                 alt="Sub Help"
                 className="w-[50%] max-w-[300px]"
+              />
+              <img
+                src={BoardEx}
+                alt="board example"
+                className="w-[50%] max-w-[300px] sm:w-[50%] lg:w-[50%]"
               />
             </div>
             <div className="flex items-start mt-10 mb-3">
@@ -91,8 +97,10 @@ const MiniH = () => {
                 4. 공유하기를 누르면 알고리즘 일치율 분석보드로 이동할 수 있는
                 코드가 복사됩니다.
                 <br />
-                해당 코드를 Match Chart에 입력하면 상대방과의 일치율 분석보드를
-                확인할 수 있습니다.
+                <br />
+                해당 코드를 왼쪽의 Match Chart 아이콘을 눌러 입력창에 입력하면
+                상대방과의 일치율 분석보드를 확인할 수 있습니다.
+                <br />
                 <br />
                 <br />
                 5. 왼쪽 하단에 End 버튼을 누르면 로그아웃됩니다.
