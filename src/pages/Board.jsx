@@ -7,7 +7,7 @@ import Retry from '../assets/retry.png';
 import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
 import { getCookie, setCookie } from '../utils/cookie';
 import { getBoardDetail, regenImage, regenKeywords } from '../api/board';
-import html2canvas from 'html2canvas'; // html2canvas 라이브러리 import
+import html2canvas from 'html2canvas';
 
 const Board = () => {
   const location = useLocation();
@@ -178,15 +178,16 @@ const Board = () => {
   const RotatingIcon = ({
     boardId,
     category,
-    index,
     onImageRegen,
     onKeywordsRegen,
   }) => {
     const [rotateDegree, setRotateDegree] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     // 클릭 시 360도 회전 및 API 호출
     const handleClick = async () => {
       setRotateDegree((prev) => prev + 360);
+      setIsLoading(true);
 
       // 이미지 재생성 호출
       if (onImageRegen) {
@@ -201,6 +202,7 @@ const Board = () => {
           }));
         } catch (error) {
           console.error('이미지 재생성 실패:', error);
+          alert('이미지 재생성에 실패했습니다.');
         }
       }
 
@@ -221,8 +223,10 @@ const Board = () => {
           }));
         } catch (error) {
           console.error('키워드 재생성 실패:', error);
+          alert('키워드 재생성에 실패했습니다.');
         }
       }
+      setIsLoading(false);
     };
 
     return (
@@ -234,8 +238,13 @@ const Board = () => {
           transition: 'transform 0.5s ease',
         }}
         onClick={handleClick}
+        disabled={isLoading}
       >
-        <img src={Retry} alt="retry" className="w-full h-full" />
+        {isLoading ? (
+          <div className="loader"></div> // 로딩 스피너 표시
+        ) : (
+          <img src={Retry} alt="retry" className="w-full h-full" />
+        )}
       </button>
     );
   };
@@ -261,10 +270,6 @@ const Board = () => {
     }
 
     if (!Array.isArray(keywords) || keywords.length === 0) {
-      console.warn(
-        'formatKeywords: keywords가 배열이 아니거나 비어 있습니다.',
-        keywords
-      );
       return <div>키워드가 없습니다.</div>; // 기본 메시지 반환
     }
 
@@ -342,6 +347,10 @@ const Board = () => {
                       {sortedCategories[2]} {ratios[sortedCategories[2]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[2]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
@@ -349,10 +358,6 @@ const Board = () => {
                     index={2} // 인덱스 (선택 사항, 디버깅 용도)
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[2]])}
-                  </div>
                 </div>
               </div>
 
@@ -365,6 +370,10 @@ const Board = () => {
                       {sortedCategories[1]} {ratios[sortedCategories[1]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[40%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[1]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
@@ -372,10 +381,6 @@ const Board = () => {
                     index={1} // 인덱스 (선택 사항, 디버깅 용도)
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[40%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[1]])}
-                  </div>
                 </div>
               </div>
             </div>
@@ -390,6 +395,10 @@ const Board = () => {
                       {sortedCategories[0]} {ratios[sortedCategories[0]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[0]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
@@ -397,10 +406,6 @@ const Board = () => {
                     index={0} // 인덱스 (선택 사항, 디버깅 용도)
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[0]])}
-                  </div>
                 </div>
               </div>
 
@@ -413,6 +418,10 @@ const Board = () => {
                       {sortedCategories[3]} {ratios[sortedCategories[3]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[3]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
@@ -420,10 +429,6 @@ const Board = () => {
                     index={3} // 인덱스 (선택 사항, 디버깅 용도)
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[3]])}
-                  </div>
                 </div>
               </div>
             </div>
