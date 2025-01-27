@@ -6,7 +6,7 @@ import Mbutton from '../components/Mbutton';
 import Retry from '../assets/retry.png';
 import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
 import { getCookie, setCookie } from '../utils/cookie';
-import { getBoardDetail, getBoards } from '../api/board';
+import { getBoardDetail, regenImage, regenKeywords } from '../api/board';
 import html2canvas from 'html2canvas'; // html2canvas 라이브러리 import
 
 const Board = () => {
@@ -14,6 +14,9 @@ const Board = () => {
   const navigate = useNavigate();
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [board, setBoard] = useState(null);
+  // 보드 ID 추출
+  const pathSegments = location.pathname.split('/');
+  const boardId = pathSegments[pathSegments.length - 1];
 
   // 유튜브 로그인 후 -> url에서 data_id 뽑아서 쿠키에 저장
   useEffect(() => {
@@ -158,34 +161,6 @@ const Board = () => {
     setIsWindowOpen(false);
   };
 
-  // 회전 아이콘 컴포넌트
-  const RotatingIcon = () => {
-    const [rotateDegree, setRotateDegree] = useState(0);
-
-    // 클릭 시 360도 회전
-    const handleClick = () => {
-      setRotateDegree((prev) => prev + 360);
-    };
-
-    return (
-      <button
-        type="button" // 기본값은 "submit"이므로 명시적으로 "button"으로 설정
-        className="w-6 h-6 cursor-pointer focus:outline-none absolute bottom-2 right-2"
-        style={{
-          transform: `rotate(${rotateDegree}deg)`,
-          transition: 'transform 0.5s ease',
-        }}
-        onClick={handleClick}
-      >
-        <img
-          src={Retry}
-          alt="retry"
-          className="w-full h-full" // 이미지 크기를 버튼에 맞춤
-        />
-      </button>
-    );
-  };
-
   // board가 null 또는 undefined인 경우 기본값 설정
   const {
     board_name,
@@ -197,6 +172,72 @@ const Board = () => {
     image_url: '',
     category_ratio: {},
     keywords: {},
+  };
+
+  // 회전 아이콘 컴포넌트
+  const RotatingIcon = ({
+    boardId,
+    category,
+    index,
+    onImageRegen,
+    onKeywordsRegen,
+  }) => {
+    const [rotateDegree, setRotateDegree] = useState(0);
+
+    // 클릭 시 360도 회전 및 API 호출
+    const handleClick = async () => {
+      setRotateDegree((prev) => prev + 360);
+
+      // 이미지 재생성 호출
+      if (onImageRegen) {
+        try {
+          const newImageUrl = await onImageRegen(boardId);
+
+          // 새로운 이미지 URL로 상태 업데이트
+          const updatedImageUrl = `${newImageUrl}?cachebuster=${new Date().getTime()}`;
+          setBoard((prevBoard) => ({
+            ...(prevBoard || {}),
+            image_url: updatedImageUrl, // 캐시 우회 URL로 업데이트
+          }));
+        } catch (error) {
+          console.error('이미지 재생성 실패:', error);
+        }
+      }
+
+      // 키워드 재생성 호출
+      if (onKeywordsRegen && category) {
+        try {
+          const newKeywords = await onKeywordsRegen(boardId, category);
+          console.log(`카테고리 [${category}]의 새 키워드:`, newKeywords);
+
+          // 새로운 키워드로 상태 업데이트
+          const updatedKeywords = `${newKeywords}?cachebuster=${new Date().getTime()}`;
+          setBoard((prevBoard) => ({
+            ...prevBoard,
+            keywords: {
+              ...prevBoard.keywords,
+              [category]: updatedKeywords,
+            },
+          }));
+        } catch (error) {
+          console.error('키워드 재생성 실패:', error);
+        }
+      }
+    };
+
+    return (
+      <button
+        type="button"
+        className="w-6 h-6 cursor-pointer focus:outline-none absolute bottom-2 right-2"
+        style={{
+          transform: `rotate(${rotateDegree}deg)`,
+          transition: 'transform 0.5s ease',
+        }}
+        onClick={handleClick}
+      >
+        <img src={Retry} alt="retry" className="w-full h-full" />
+      </button>
+    );
   };
 
   // 카테고리 이름 배열 (백엔드에서 제공된 순서대로)
@@ -215,16 +256,30 @@ const Board = () => {
 
   // 키워드를 포맷팅하는 함수
   const formatKeywords = (keywords) => {
-    if (!keywords || keywords.length === 0) return null;
+    if (typeof keywords === 'string') {
+      keywords = keywords.split(',');
+    }
 
-    return keywords.slice(0, 3).map((keyword, index) => (
-      <div key={index}>
-        {index === 0 && '① '}
-        {index === 1 && '② '}
-        {index === 2 && '③ '}
-        {keyword}
-      </div>
-    ));
+    if (!Array.isArray(keywords) || keywords.length === 0) {
+      console.warn(
+        'formatKeywords: keywords가 배열이 아니거나 비어 있습니다.',
+        keywords
+      );
+      return <div>키워드가 없습니다.</div>; // 기본 메시지 반환
+    }
+
+    // 쿼리 파라미터 제거 처리
+    return keywords.slice(0, 3).map((keyword, index) => {
+      const cleanedKeyword = keyword.split('?')[0]; // `?` 이후 제거
+      return (
+        <div key={index}>
+          {index === 0 && '① '}
+          {index === 1 && '② '}
+          {index === 2 && '③ '}
+          {cleanedKeyword}
+        </div>
+      );
+    });
   };
 
   return (
@@ -247,7 +302,7 @@ const Board = () => {
               <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-square">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center">
                   {/* Retry 아이콘 */}
-                  <RotatingIcon />
+                  <RotatingIcon boardId={boardId} onImageRegen={regenImage} />
                 </div>
                 {image_url && (
                   <img
@@ -288,7 +343,12 @@ const Board = () => {
                     </span>
                   )}
                   {/* Retry 아이콘 */}
-                  <RotatingIcon />
+                  <RotatingIcon
+                    boardId={boardId} // 보드 ID 전달
+                    category={sortedCategories[2]} // 현재 카테고리 (3등)
+                    index={2} // 인덱스 (선택 사항, 디버깅 용도)
+                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
+                  />
                   {/* 키워드 텍스트 */}
                   <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[2]])}
@@ -306,7 +366,12 @@ const Board = () => {
                     </span>
                   )}
                   {/* Retry 아이콘 */}
-                  <RotatingIcon />
+                  <RotatingIcon
+                    boardId={boardId} // 보드 ID 전달
+                    category={sortedCategories[1]} // 현재 카테고리 (1등)
+                    index={1} // 인덱스 (선택 사항, 디버깅 용도)
+                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
+                  />
                   {/* 키워드 텍스트 */}
                   <div className="absolute top-[40%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[1]])}
@@ -326,7 +391,12 @@ const Board = () => {
                     </span>
                   )}
                   {/* Retry 아이콘 */}
-                  <RotatingIcon />
+                  <RotatingIcon
+                    boardId={boardId} // 보드 ID 전달
+                    category={sortedCategories[0]} // 현재 카테고리 (1등)
+                    index={0} // 인덱스 (선택 사항, 디버깅 용도)
+                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
+                  />
                   {/* 키워드 텍스트 */}
                   <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[0]])}
@@ -344,7 +414,12 @@ const Board = () => {
                     </span>
                   )}
                   {/* Retry 아이콘 */}
-                  <RotatingIcon />
+                  <RotatingIcon
+                    boardId={boardId} // 보드 ID 전달
+                    category={sortedCategories[3]} // 현재 카테고리 (4등)
+                    index={3} // 인덱스 (선택 사항, 디버깅 용도)
+                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
+                  />
                   {/* 키워드 텍스트 */}
                   <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[3]])}
