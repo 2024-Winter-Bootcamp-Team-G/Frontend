@@ -13,7 +13,7 @@ const Mbutton = ({
 
   const styles = {
     edit: `w-[115px] h-[47px] ${baseStyle}`,
-    board: `w-[7rem] h-[3rem] max-w-[60%] max-h-[15%] ${baseStyle}`,
+    board: `w-[5rem] h-[2rem] ${baseStyle}`,
     create: `max-w-[262px] h-[50px] bg-[#BFCFEF] border-4 border-[#5C5C5C]/70 flex items-center justify-center pr-9 truncate relative`,
   };
 
