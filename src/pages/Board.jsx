@@ -304,7 +304,7 @@ const Board = () => {
           <div className="grid grid-cols-3 px-10 pb-5 w-full h-full">
             <div className="relative flex flex-col">
               {/* 이미지 컨테이너 */}
-              <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-square">
+              <div className="relative w-[100%] bg-[#d9d9d9] rounded-[20px] aspect-square">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center">
                   {/* Retry 아이콘 */}
                   <RotatingIcon boardId={boardId} onImageRegen={regenImage} />
@@ -362,7 +362,7 @@ const Board = () => {
               </div>
 
               {/* 2등 컨테이너 */}
-              <div className="relative mt-[3%] w-[92%] h-[56%] bg-[#4cb2d2] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              <div className="relative mt-[3%] w-[92%] h-[56%] bg-[#80D3ED] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[1] && (
@@ -387,7 +387,7 @@ const Board = () => {
 
             <div className="justify-items-center">
               {/* 1등 컨테이너 */}
-              <div className="relative mb-[3%] w-[95%] h-[60%] bg-[#79c6de] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              <div className="relative mb-[3%] w-[95%] h-[60%] bg-[#86E1FD] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[5px] left-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[0] && (
