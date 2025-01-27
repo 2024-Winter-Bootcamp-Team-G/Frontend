@@ -1,0 +1,14 @@
+:root {
+  --default-cursor: url('../assets/cursor.svg'), auto;
+  --hover-cursor: url('../assets/pointer.svg'), pointer;
+}
+
+/* 기본 커서 */
+body {
+  cursor: var(--default-cursor);
+}
+
+/* 버튼 hover 커서 */
+button:hover {
+  cursor: var(--hover-cursor);
+}
