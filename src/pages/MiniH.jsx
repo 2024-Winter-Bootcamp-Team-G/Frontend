@@ -85,7 +85,7 @@ const MiniH = () => {
               />
               <img
                 src={BoardEx}
-                alt="board example"
+                alt="Board Example"
                 className="w-[50%] max-w-[300px] sm:w-[50%] lg:w-[50%]"
               />
             </div>
