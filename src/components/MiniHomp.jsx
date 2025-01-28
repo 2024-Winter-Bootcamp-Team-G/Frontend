@@ -214,7 +214,7 @@ const MiniHomp = ({ children, onClose }) => {
                   </div>
                   {/* 이미지 컨테이너 */}
                   <div className="flex justify-center w-full h-full mt-5">
-                    <div className="w-[85%] h-[40%] max-w-[300px] max-h-[260px] bg-[#D9D9D9] rounded-[20px] overflow-hidden">
+                    <div className="w-[70%] h-[40%] max-w-[300px] max-h-[260px] bg-[#D9D9D9] rounded-[20px] overflow-hidden">
                       {/* 이미지 삽입 */}
                       {profileImage ? (
                         <img
