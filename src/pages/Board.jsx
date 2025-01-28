@@ -9,7 +9,6 @@ import { getCookie, setCookie } from '../utils/cookie';
 import { getBoardDetail, regenImage, regenKeywords } from '../api/board';
 import html2canvas from 'html2canvas'; // html2canvas 라이브러리 import
 
-
 const Board = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -124,7 +123,7 @@ const Board = () => {
       const canvas = await html2canvas(element, {
         scale: 2, // 해상도 높이기
         useCORS: true, // CORS 문제 해결
-        allowTaint: false, // taint된 이미지 허용
+        allowTaint: true, // taint된 이미지 허용
         logging: true, // 로그 출력 (디버깅용)
         ignoreElements: (el) => {
           // 버튼들만 캡처에서 제외
