@@ -7,6 +7,29 @@ import Mpopup from './Mpopup.jsx';
 import api from '../api/axios_config'; // axios 설정 파일 import
 import { getCookie } from '../utils/cookie'; // 쿠키 함수 import
 import { getBoards } from '../api/board.js';
+import BgmGif from '../assets/cat.gif.gif';
+import NameGif from '../assets/NameCat.gif';
+
+// CSS 애니메이션 정의
+const styles = `
+  @keyframes scrollText {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .scrolling-text {
+    white-space: nowrap;
+    animation: scrollText 10s linear infinite;
+  }
+
+  .scrolling-text.paused {
+    animation-play-state: paused;
+  }
+`;
 
 const MiniHomp = ({ children, onClose }) => {
   const navigate = useNavigate();
@@ -15,6 +38,7 @@ const MiniHomp = ({ children, onClose }) => {
   const [position, setPosition] = useState({ x: 7, y: 0 }); // 초기 위치
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [username, setUsername] = useState(''); // 이름 상태 추가
+  const [isPaused, setIsPaused] = useState(false); // 애니메이션 일시 정지 상태
 
   // 보드 클릭 핸들러
   const handleBoardClick = async () => {
@@ -138,6 +162,9 @@ const MiniHomp = ({ children, onClose }) => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen overflow-hidden">
+      {/* CSS 애니메이션 스타일 추가 */}
+      <style>{styles}</style>
+
       {/* 팝업 렌더링 */}
       {popupVariant && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -240,7 +267,22 @@ const MiniHomp = ({ children, onClose }) => {
                   {/* 이름과 버튼 컨테이너 */}
                   <div className="absolute top-[47%] left-1/2 transform -translate-x-1/2 flex items-center justify-between w-[85%] max-w-[306px]">
                     {/* 이름 컨테이너 */}
-                    <div className="w-[85%] max-w-[174px] h-[50px] bg-[#D9D9D9] rounded-[10px] flex items-center justify-center overflow-hidden">
+                    <div
+                      className="relative w-[85%] max-w-[174px] h-[50px] bg-[#ffffff] flex items-center justify-center overflow-hidden"
+                      style={{
+                        borderBottom: '3px solid #919191', // 테두리 두께와 색상
+                      }}
+                    >
+                      {/* GIF 추가 (왼쪽 고정) */}
+                      <div className="absolute left-2 top-1/2 transform -translate-y-1/2 w-[30px] h-[30px]">
+                        <img
+                          src={NameGif} // GIF 파일 경로
+                          alt="Name Gif"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* 이름 텍스트 (가운데 정렬) */}
                       <p className="text-black text-[clamp(12px, 1.5vw, 16px)] font-bold truncate">
                         {username || '이름을 불러오는 중...'}
                       </p>
@@ -262,12 +304,41 @@ const MiniHomp = ({ children, onClose }) => {
                       사진만 바라봐..
                     </p>
                   </div>
-                  {/* bgm 컨테이너 */}
-                  <div className="absolute top-[75%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[302px] h-[50px] bg-[#D9D9D9] rounded-[10px] flex justify-center items-center overflow-hidden">
-                    <p className="text-black text-[clamp(12px, 1.5vw, 16px)] font-bold truncate">
-                      BGM ???
-                    </p>
+                  {/* BGM 컨테이너 */}
+                  <div
+                    className="absolute top-[75%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[302px] h-[50px] bg-white rounded-[10px] flex items-center overflow-hidden"
+                    style={{
+                      border: '3px solid gray', // 검정 테두리 추가
+                      boxShadow:
+                        '2px 2px 8px rgba(0, 0, 0, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.5)', // 입체감 추가
+                    }}
+                  >
+                    {/* GIF 영역 */}
+                    <div className="w-[40px] h-[40px] flex-shrink-0 ml-2 overflow-hidden">
+                      <img
+                        src={BgmGif} // GIF 파일 경로
+                        alt="BGM Gif"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* 텍스트 영역 */}
+                    <div className="relative flex-1 h-full overflow-hidden">
+                      <p
+                        className={`text-black text-[clamp(12px, 1.5vw, 16px)] font-bold whitespace-nowrap scrolling-text ${
+                          isPaused ? 'paused' : ''
+                        }`}
+                        onClick={() => setIsPaused(!isPaused)}
+                        style={{
+                          marginLeft: '10px', // GIF 오른쪽 여백
+                          lineHeight: '50px', // 텍스트가 컨테이너 중앙에 오도록
+                        }}
+                      >
+                        'Y (Please Tell Me Why) - 프리스타일'
+                      </p>
+                    </div>
                   </div>
+
                   {/* 보드 만들기 컨테이너 */}
                   <div className="absolute top-[88%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-[300px] flex justify-center items-center">
                     <div className="flex-shrink-0 w-[90%] max-w-[260px]">
