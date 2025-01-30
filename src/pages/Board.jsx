@@ -356,7 +356,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[0]}
+                    category={sortedCategories[2]}
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
                 </div>
@@ -402,7 +402,7 @@ const Board = () => {
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[2]}
+                    category={sortedCategories[0]}
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
                 </div>
