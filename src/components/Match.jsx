@@ -4,7 +4,7 @@ import Button from './Button';
 import matchIcon from '../assets/share.png';
 import Input from './Input'; // Input 컴포넌트 추가
 import api from '../api/axios_config'; // API 요청을 위한 axios 인스턴스
-import { setCookie } from '../utils/cookie';
+import { setCookie, getCookie } from '../utils/cookie';
 
 const Match = ({ onClose }) => {
   const [code, setCode] = useState(''); // 유효코드 입력값 상태
@@ -21,17 +21,19 @@ const Match = ({ onClose }) => {
     try {
       // API 요청: 공유된 보드 정보 가져오기
       const response = await api.get(`/boards/shared/${code}`);
+      console.log('API 응답:', response.data);
+
       const sharedBoardId = response.data?.result?.shared_board?.id;
       setCookie('shared_board_id', sharedBoardId, 1);
 
       console.log('공유된 보드 정보:', response.data);
-      console.log('Shared Board ID 저장 완료:', sharedBoardId);
+      console.log('Shared Board ID 저장 완료:', getCookie(sharedBoardId));
 
       // share 페이지로 이동
       navigate('/share', {
         state: {
           boardUuid: code,
-          boardName: response.data.shared_board.board_name,
+          boardName: response.data.result.shared_board,
         },
       });
     } catch (error) {
