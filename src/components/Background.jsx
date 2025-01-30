@@ -111,7 +111,7 @@ const Background = ({ children }) => {
       const refreshToken = getCookie('refresh_token');
 
       if (!refreshToken) {
-        alert('Refresh token 없음');
+        alert('로그인이 되어 있지 않습니다.');
         navigate('/login');
         return;
       }

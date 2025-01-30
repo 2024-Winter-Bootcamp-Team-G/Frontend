@@ -35,15 +35,12 @@ const SignUp = () => {
         params: { email },
       });
       if (response.data.exists) {
-        setEmailExists(true);
-        alert('이미 존재하는 이메일입니다.');
-      } else {
         setEmailExists(false);
         alert('사용 가능한 이메일입니다.');
       }
     } catch (error) {
       console.error('이메일 확인 오류:', error);
-      alert('이메일 확인 중 오류가 발생했습니다.');
+      alert('이미 존재하는 이메일입니다.');
     }
   };
 
