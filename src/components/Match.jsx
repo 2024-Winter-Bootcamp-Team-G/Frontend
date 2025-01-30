@@ -37,11 +37,7 @@ const Match = ({ onClose }) => {
     } catch (error) {
       console.error('API 요청 실패:', error);
 
-      if (error.response && error.response.data.message) {
-        setError(error.response.data.message);
-      } else {
-        setError('유효코드가 잘못되었습니다. 다시 시도해주세요.');
-      }
+      setError('유효코드가 잘못되었습니다. 다시 시도해주세요.');
     }
   };
 
