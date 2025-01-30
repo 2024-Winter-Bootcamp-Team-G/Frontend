@@ -1,4 +1,5 @@
 import './styles/index.css';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -12,6 +13,9 @@ import './styles/cursor.css';
 import Start from './pages/Start';
 
 const App = () => {
+  useEffect(() => {
+    document.title = 'Algo.com';
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
