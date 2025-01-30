@@ -137,10 +137,6 @@ const RadarChartComponent = () => {
     },
   };
 
-  if (!chartData.labels.length) {
-    return <div>로딩 중...</div>; // 데이터 로딩 중 표시
-  }
-
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <Radar data={chartData} options={options} />
