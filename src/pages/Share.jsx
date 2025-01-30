@@ -134,13 +134,19 @@ const Share = ({ onClose }) => {
           </p>
 
           {/* Radar 차트 및 카테고리 구성 */}
-          <div className="relative -top-[5.5rem] left-[23rem] w-full h-[55vh]">
+          <div className="relative -top-[5.5rem] left-[22rem] w-full h-[55vh]">
+            {/* 제목 */}
             <p className="text-center text-[#3E3E3E] text-xl mb-4">
               [각 카테고리별 비율]
             </p>
+
+            {/* 로딩 중 표현 */}
             {isLoading ? (
-              <p>데이터를 불러오는 중입니다...</p>
+              <p className="text-center text-gray-500 mt-4">
+                데이터를 불러오는 중입니다...
+              </p>
             ) : (
+              /* 레이더 차트 */
               <RadarChartComponent
                 data={{
                   labels: matchData.new_categories,
