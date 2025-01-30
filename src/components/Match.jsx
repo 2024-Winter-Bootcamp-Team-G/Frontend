@@ -4,6 +4,7 @@ import Button from './Button';
 import matchIcon from '../assets/share.png';
 import Input from './Input'; // Input 컴포넌트 추가
 import api from '../api/axios_config'; // API 요청을 위한 axios 인스턴스
+import { setCookie } from '../utils/cookie';
 
 const Match = ({ onClose }) => {
   const [code, setCode] = useState(''); // 유효코드 입력값 상태
@@ -20,10 +21,18 @@ const Match = ({ onClose }) => {
     try {
       // API 요청: 공유된 보드 정보 가져오기
       const response = await api.get(`/boards/shared/${code}`);
+
+      setCookie('shared_board_id', response.data.shared_board.id, {
+        expires: 1,
+        path: '/',
+        sameSite: 'Strict',
+      });
+
       console.log('공유된 보드 정보:', response.data);
 
       // share 페이지로 이동 (보드 UUID를 쿼리 파라미터로 전달)
-      navigate(`/share?board_uuid=${code}`);
+      navigate('/share');
+      // navigate(`/share?board_uuid=${code}`);
     } catch (error) {
       console.error('API 요청 실패:', error);
       setError('유효코드가 잘못되었습니다. 다시 시도해주세요.');
