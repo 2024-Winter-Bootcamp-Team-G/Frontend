@@ -39,6 +39,18 @@ const Share = ({ onClose }) => {
         },
       });
 
+      // API 응답 구조를 디버깅
+      console.log('API 응답:', response.data);
+
+      // 응답 검증
+      if (
+        !response.data ||
+        !response.data.result ||
+        !response.data.result.shared_board
+      ) {
+        throw new Error('올바르지 않은 응답 데이터 구조를 받았습니다.');
+      }
+
       // API 응답이 성공적일 경우 데이터 업데이트
       if (response.status === 200) {
         const { result } = response.data;
