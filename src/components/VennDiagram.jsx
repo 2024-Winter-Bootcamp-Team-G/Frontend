@@ -53,12 +53,13 @@ const VennDiagram = ({
 
   const getTooltipContent = (type) => {
     switch (type) {
-      case 'match':
+      case 'match': {
         return {
           title: '우리의 일치 키워드',
           keyword: matchKeywords.join(', ') || '없음', // 일치하는 키워드
         };
-      case 'left-unmatch':
+      }
+      case 'left-unmatch': {
         // User1의 키워드에서 matchKeywords 제거
         const leftUnmatchedKeywords = user1Keywords.filter(
           (keyword) => !matchKeywords.includes(keyword)
@@ -67,7 +68,8 @@ const VennDiagram = ({
           title: '나의 키워드',
           keyword: leftUnmatchedKeywords.join(', ') || '없음', // User1의 불일치 키워드
         };
-      case 'right-unmatch':
+      }
+      case 'right-unmatch': {
         // User2의 키워드에서 matchKeywords 제거
         const rightUnmatchedKeywords = user2Keywords.filter(
           (keyword) => !matchKeywords.includes(keyword)
@@ -76,6 +78,7 @@ const VennDiagram = ({
           title: '친구의 키워드',
           keyword: rightUnmatchedKeywords.join(', ') || '없음', // User2의 불일치 키워드
         };
+      }
       default:
         return { title: '', keyword: '' };
     }

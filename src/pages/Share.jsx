@@ -166,7 +166,7 @@ const Share = ({ onClose }) => {
           </div>
 
           {/* Venn 다이어그램 */}
-          <div className="absolute top-[40%] left-10 w-[46%] aspect-[2/1]">
+          <div className="absolute top-[50%] left-10 w-[46%] aspect-[2/1]">
             {isLoading ? (
               <p>데이터를 불러오는 중입니다...</p>
             ) : (
