@@ -7,7 +7,7 @@ import Retry from '../assets/retry.png';
 import api from '../api/axios_config'; // axios_config 파일에서 api 가져오기
 import { getCookie, setCookie } from '../utils/cookie';
 import { getBoardDetail, regenImage, regenKeywords } from '../api/board';
-import html2canvas from 'html2canvas'; // html2canvas 라이브러리 import
+import html2canvas from 'html2canvas';
 
 const Board = () => {
   const location = useLocation();
@@ -178,15 +178,16 @@ const Board = () => {
   const RotatingIcon = ({
     boardId,
     category,
-    index,
     onImageRegen,
     onKeywordsRegen,
   }) => {
     const [rotateDegree, setRotateDegree] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     // 클릭 시 360도 회전 및 API 호출
     const handleClick = async () => {
       setRotateDegree((prev) => prev + 360);
+      setIsLoading(true);
 
       // 이미지 재생성 호출
       if (onImageRegen) {
@@ -201,6 +202,7 @@ const Board = () => {
           }));
         } catch (error) {
           console.error('이미지 재생성 실패:', error);
+          alert('이미지 재생성에 실패했습니다.');
         }
       }
 
@@ -221,8 +223,10 @@ const Board = () => {
           }));
         } catch (error) {
           console.error('키워드 재생성 실패:', error);
+          alert('키워드 재생성에 실패했습니다.');
         }
       }
+      setIsLoading(false);
     };
 
     return (
@@ -234,8 +238,13 @@ const Board = () => {
           transition: 'transform 0.5s ease',
         }}
         onClick={handleClick}
+        disabled={isLoading}
       >
-        <img src={Retry} alt="retry" className="w-full h-full" />
+        {isLoading ? (
+          <div className="loader"></div> // 로딩 스피너 표시
+        ) : (
+          <img src={Retry} alt="retry" className="w-full h-full" />
+        )}
       </button>
     );
   };
@@ -261,10 +270,6 @@ const Board = () => {
     }
 
     if (!Array.isArray(keywords) || keywords.length === 0) {
-      console.warn(
-        'formatKeywords: keywords가 배열이 아니거나 비어 있습니다.',
-        keywords
-      );
       return <div>키워드가 없습니다.</div>; // 기본 메시지 반환
     }
 
@@ -292,14 +297,34 @@ const Board = () => {
           </div>
           {/* 실선 */}
           <div className="border-t border-[#6C6C6C] w-[90%] mx-auto mt-3 mb-5"></div>
-          <div className="text-black text-left ml-11 mb-6 text-[1.5rem]">
+          <div className="flex items-center justify-between text-black text-left mx-11 mb-5 text-[1.5rem]">
             {board_name}
+            <div className="flex space-x-1">
+              <Mbutton
+                text="완료하기"
+                className="text-sm screenshot-hide"
+                variant="board"
+                onClick={() => navigate('/notice')}
+              />
+              <Mbutton
+                text="공유하기"
+                className="text-sm screenshot-hide"
+                variant="board"
+                onClick={shareBoard}
+              />
+              <Mbutton
+                text="스크린샷"
+                className="text-sm screenshot-hide"
+                variant="board"
+                onClick={handleScreenshot}
+              />
+            </div>
           </div>
           {/* 보드판 */}
           <div className="grid grid-cols-3 px-10 pb-5 w-full h-full">
             <div className="relative flex flex-col">
               {/* 이미지 컨테이너 */}
-              <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-square">
+              <div className="relative w-[90%] bg-[#d9d9d9] rounded-[20px] aspect-[9/16]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex items-center justify-center">
                   {/* Retry 아이콘 */}
                   <RotatingIcon boardId={boardId} onImageRegen={regenImage} />
@@ -312,29 +337,11 @@ const Board = () => {
                   />
                 )}
               </div>
-              <Mbutton
-                text="완료하기"
-                className="mt-[10%] screenshot-hide"
-                variant="board"
-                onClick={() => navigate('/notice')} // 보드 생성 함수 호출
-              />
-              <Mbutton
-                text="공유하기"
-                className="mt-2 screenshot-hide"
-                variant="board"
-                onClick={shareBoard}
-              />
-              <Mbutton
-                text="스크린샷"
-                className="mt-2 screenshot-hide"
-                variant="board"
-                onClick={handleScreenshot}
-              />
             </div>
 
             <div className="justify-items-center">
-              {/* 3등 컨테이너 */}
-              <div className="relative w-[92%] h-[41%] bg-[#aedcea] rounded-[1.25rem] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              {/* 1등 컨테이너 */}
+              <div className="relative mb-[4%] w-[90%] h-[48%] bg-[#aedcea] rounded-[1.25rem] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[1.25rem] border-[0.1875rem] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[2] && (
@@ -342,22 +349,21 @@ const Board = () => {
                       {sortedCategories[2]} {ratios[sortedCategories[2]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[2]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[2]} // 현재 카테고리 (3등)
-                    index={2} // 인덱스 (선택 사항, 디버깅 용도)
+                    category={sortedCategories[0]}
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[2]])}
-                  </div>
                 </div>
               </div>
 
               {/* 2등 컨테이너 */}
-              <div className="relative mt-[3%] w-[92%] h-[56%] bg-[#4cb2d2] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              <div className="relative w-[90%] h-[48%] bg-[#80D3ED] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[0.3125rem] left-[0.3125rem] w-[calc(100%-0.625rem)] h-[calc(100%-0.625rem)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[1] && (
@@ -365,24 +371,23 @@ const Board = () => {
                       {sortedCategories[1]} {ratios[sortedCategories[1]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[1]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[1]} // 현재 카테고리 (1등)
-                    index={1} // 인덱스 (선택 사항, 디버깅 용도)
+                    category={sortedCategories[1]}
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[40%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[1]])}
-                  </div>
                 </div>
               </div>
             </div>
 
             <div className="justify-items-center">
-              {/* 1등 컨테이너 */}
-              <div className="relative mb-[3%] w-[95%] h-[60%] bg-[#79c6de] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              {/* 3등 컨테이너 */}
+              <div className="relative mb-[4%] w-[95%] h-[48%] bg-[#86E1FD] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[5px] left-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[0] && (
@@ -390,22 +395,21 @@ const Board = () => {
                       {sortedCategories[0]} {ratios[sortedCategories[0]]}%
                     </span>
                   )}
-                  {/* Retry 아이콘 */}
-                  <RotatingIcon
-                    boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[0]} // 현재 카테고리 (1등)
-                    index={0} // 인덱스 (선택 사항, 디버깅 용도)
-                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
-                  />
                   {/* 키워드 텍스트 */}
                   <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
                     {formatKeywords(keywords[sortedCategories[0]])}
                   </div>
+                  {/* Retry 아이콘 */}
+                  <RotatingIcon
+                    boardId={boardId} // 보드 ID 전달
+                    category={sortedCategories[2]}
+                    onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
+                  />
                 </div>
               </div>
 
               {/* 4등 컨테이너 */}
-              <div className="relative w-[95%] h-[37%] bg-[#c3dee7] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+              <div className="relative w-[95%] h-[48%] bg-[#c3dee7] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <div className="absolute top-[5px] left-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded-[20px] border-[3px] border-dashed border-white flex justify-center">
                   {/* 카테고리 텍스트 */}
                   {sortedCategories[3] && (
@@ -413,17 +417,16 @@ const Board = () => {
                       {sortedCategories[3]} {ratios[sortedCategories[3]]}%
                     </span>
                   )}
+                  {/* 키워드 텍스트 */}
+                  <div className="absolute top-[35%] left-0 pl-4 text-black text-lg font-normal text-left">
+                    {formatKeywords(keywords[sortedCategories[3]])}
+                  </div>
                   {/* Retry 아이콘 */}
                   <RotatingIcon
                     boardId={boardId} // 보드 ID 전달
-                    category={sortedCategories[3]} // 현재 카테고리 (4등)
-                    index={3} // 인덱스 (선택 사항, 디버깅 용도)
+                    category={sortedCategories[3]}
                     onKeywordsRegen={regenKeywords} // 키워드 재생성 함수
                   />
-                  {/* 키워드 텍스트 */}
-                  <div className="absolute top-[30%] left-0 pl-4 text-black text-lg font-normal text-left">
-                    {formatKeywords(keywords[sortedCategories[3]])}
-                  </div>
                 </div>
               </div>
             </div>

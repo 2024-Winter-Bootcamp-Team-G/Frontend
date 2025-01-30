@@ -26,6 +26,7 @@ const RadarChartComponent = () => {
     labels: [],
     datasets: [],
   });
+  const [maxValue, setMaxValue] = useState(10); // 데이터 최댓값 상태 관리
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,44 +39,40 @@ const RadarChartComponent = () => {
         });
         console.log('API 응답 데이터:', response.data); // 응답 데이터 확인
 
-        const { board1_category_ratio, board2_category_ratio, match_ratio } =
-          response.data;
-        const { user1_category, user2_category } = match_ratio.result;
+        const { result } = response.data;
 
-        // 카테고리 이름 배열 (user1과 user2의 카테고리를 합치고 중복 제거)
-        const categories = [...new Set([...user1_category, ...user2_category])];
+        // 카테고리 이름 배열 및 사용자별 카테고리 비율 가져오기
+        const categories = result.new_categories; // 카테고리 라벨들
+        const user1Ratios = result.user1_category_ratio; // 사용자1 데이터
+        const user2Ratios = result.user2_category_ratio; // 사용자2 데이터
 
-        // board1과 board2의 카테고리 비율을 새로운 카테고리 배열에 맞게 재조정
-        const adjustedBoard1Ratio = categories.map((category) => {
-          const index = user1_category.indexOf(category);
-          return index !== -1 ? board1_category_ratio[index] : 0;
-        });
+        // 최대값 계산 (user1과 user2 데이터의 최대값 중 큰 값)
+        const calculatedMaxValue = Math.max(...user1Ratios, ...user2Ratios);
 
-        const adjustedBoard2Ratio = categories.map((category) => {
-          const index = user2_category.indexOf(category);
-          return index !== -1 ? board2_category_ratio[index] : 0;
-        });
+        // 최댓값을 올림 (ex: 7.3이면 8로)
+        const roundedMaxValue = Math.ceil(calculatedMaxValue);
 
-        // 레이더 차트 데이터 설정
+        // 차트에 반영할 데이터와 최대값 설정
         setChartData({
-          labels: categories, // 카테고리 이름
+          labels: categories, // 카테고리 라벨
           datasets: [
             {
               label: '나',
-              data: adjustedBoard1Ratio, // 보드 1의 카테고리별 비율
+              data: user1Ratios, // 사용자의 카테고리별 비율
               borderColor: '#ed8b67',
               backgroundColor: 'rgba(237, 139, 103, 0.5)',
               pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
             },
             {
               label: '친구',
-              data: adjustedBoard2Ratio, // 보드 2의 카테고리별 비율
+              data: user2Ratios, // 친구의 카테고리별 비율
               borderColor: '#36abd1',
               backgroundColor: 'rgba(54, 162, 235, 0.5)',
               pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
             },
           ],
         });
+        setMaxValue(roundedMaxValue); // 최댓값 업데이트
       } catch (error) {
         console.error('Error fetching match ratio:', error);
       }
@@ -92,24 +89,18 @@ const RadarChartComponent = () => {
         angleLines: {
           display: true,
         },
-        suggestedMin: 0,
-        suggestedMax: 100,
+        suggestedMin: 0, // 최소 값
+        suggestedMax: maxValue, // 동적으로 계산된 최대값
         ticks: {
-          font: {
-            family: 'NeoDunggeunmo',
-          },
-          stepSize: 20,
-          callback: (value) => `${value}`,
-          backdropColor: 'rgba(195, 199, 203, 1)',
-          color: '#717171',
+          display: false, // 기준 숫자 비활성화 (화면에 안 보이게 설정)
+          stepSize: maxValue / 10, // 동적으로 계산된 틱 간격 (계산에는 여전히 사용)
         },
         pointLabels: {
           font: {
-            family: 'NeoDunggeunmo',
             size: 13,
             weight: 'bold',
           },
-          color: '#666666',
+          color: '#333', // 카테고리 제목 색상
         },
       },
     },
@@ -117,48 +108,37 @@ const RadarChartComponent = () => {
       legend: {
         labels: {
           font: {
-            family: 'NeoDunggeunmo',
             size: 14,
             weight: 'bold',
           },
-          color: '#666666',
+          color: '#333',
         },
       },
       title: {
         display: true,
-        text: '각 카테고리별 비율',
+        text: '사용자 간 카테고리 비율 비교',
         font: {
-          family: 'NeoDunggeunmo',
           size: 16,
           weight: 'bold',
         },
-        color: '#000000',
         align: 'center',
-        position: 'top',
-        padding: {
-          top: 10,
-          bottom: 30,
-        },
       },
       tooltip: {
-        enabled: true,
-        mode: 'nearest',
-        intersect: false,
+        // 툴팁 연결
+        enabled: true, // 툴팁 활성화
+        mode: 'nearest', // 마우스 근처에서만 동작
+        intersect: false, // 포인트 위에서만 동작 (더 민감하게 설정)
         callbacks: {
           label: function (context) {
-            return `${context.dataset.label}: ${context.raw}`;
+            return `${context.dataset.label}: ${context.raw}%`;
           },
         },
       },
     },
-    hover: {
-      mode: 'index',
-      intersect: false,
-    },
   };
 
-  if (!chartData) {
-    return <div>Loading...</div>; // 데이터 로딩 중 표시
+  if (!chartData.labels.length) {
+    return <div>로딩 중...</div>; // 데이터 로딩 중 표시
   }
 
   return (

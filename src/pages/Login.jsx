@@ -83,7 +83,7 @@ const Login = () => {
 
             <div className="flex items-center mb-6">
               <label htmlFor="email" className="text-[2rem] mr-4">
-                이메일:
+                이 메 일:
               </label>
               <Input
                 name="email"
@@ -106,7 +106,7 @@ const Login = () => {
 
             {error && <p className="text-red-500 text-[1.5rem]">{error}</p>}
           </div>
-          <div className="absolute bottom-4 right-4 flex gap-4">
+          <div className="absolute bottom-4 right-9 flex gap-4">
             <Button type="default" onClick={handleSignUp}>
               회원가입
             </Button>

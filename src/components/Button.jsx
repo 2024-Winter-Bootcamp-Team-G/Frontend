@@ -1,7 +1,7 @@
 const Button = ({ type = 'default', onClick, children, className }) => {
   // 버튼 타입별 크기와 스타일
   const styles = {
-    default: 'w-[16vw] h-[6vh] min-w-[170px] min-h-[45px] text-[32px]',
+    default: 'w-[11vw] h-[5.5vh] max-w-[200px] max-h-[55px] text-[1.5vw]',
     x: 'w-[clamp(20px,5vh,30px)] h-[clamp(20px,5vh,30px)] aspect-square text-[16px]',
     popup: 'w-[10vw] h-[5vh] min-w-[100px] min-h-[40px] text-[32px]',
     ok: 'w-[9vw] h-[4vh] min-w-[90px] min-h-[30px] text-[20px]',
