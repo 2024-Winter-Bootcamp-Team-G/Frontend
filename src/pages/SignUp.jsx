@@ -195,11 +195,11 @@ const SignUp = () => {
           </div>
         </div>
         <div
-          className="absolute bottom-[5.5rem] left-10 w-[90%] h-[3px] bg-[#868A8E] 
+          className="mx-auto w-[95%] h-[3px] bg-[#868A8E] 
                shadow-[0_3px_0_#FFFFFF,0_-3px_0_#929598]"
         ></div>
         {/* 오른쪽 아래 버튼 */}
-        <div className="absolute bottom-4 right-4 flex gap-4">
+        <div className="absolute bottom-4 right-9 flex gap-4">
           <Button type="default" onClick={() => navigate('/login')}>
             &lt; 뒤로(B)
           </Button>
