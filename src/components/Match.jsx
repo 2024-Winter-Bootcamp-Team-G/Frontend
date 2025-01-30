@@ -31,8 +31,7 @@ const Match = ({ onClose }) => {
       console.log('공유된 보드 정보:', response.data);
 
       // share 페이지로 이동 (보드 UUID를 쿼리 파라미터로 전달)
-      navigate('/share');
-      // navigate(`/share?board_uuid=${code}`);
+      navigate(`/share?board_uuid=${code}`);
     } catch (error) {
       console.error('API 요청 실패:', error);
       setError('유효코드가 잘못되었습니다. 다시 시도해주세요.');
