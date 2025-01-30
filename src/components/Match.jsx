@@ -27,7 +27,7 @@ const Match = ({ onClose }) => {
       setCookie('shared_board_id', sharedBoardId, 1);
 
       console.log('공유된 보드 정보:', response.data);
-      console.log('Shared Board ID 저장 완료:', getCookie(sharedBoardId));
+      console.log('Shared Board ID 저장 완료:', getCookie('shared_board_id'));
 
       // share 페이지로 이동
       navigate('/share', {
