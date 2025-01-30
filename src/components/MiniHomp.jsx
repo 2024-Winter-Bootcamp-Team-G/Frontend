@@ -334,7 +334,7 @@ const MiniHomp = ({ children, onClose }) => {
                           lineHeight: '50px', // 텍스트가 컨테이너 중앙에 오도록
                         }}
                       >
-                        'Y (Please Tell Me Why) - 프리스타일'
+                        Y (Please Tell Me Why) - 프리스타일
                       </p>
                     </div>
                   </div>
