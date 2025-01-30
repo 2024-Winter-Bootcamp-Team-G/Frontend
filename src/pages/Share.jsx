@@ -28,6 +28,13 @@ const Share = ({ onClose }) => {
     setIsLoading(true);
     setError('');
     const SharedBoardId = getCookie('shared_board_id');
+    console.log('api호출전 SharedBoardId:', SharedBoardId);
+
+    if (!SharedBoardId) {
+      console.error('SharedBoardId가 쿠키에서 누락되었습니다.');
+      setError('Shared Board ID를 불러오지 못했습니다. 다시 시도해주세요.');
+      return;
+    }
     try {
       const response = await api.post('/boards/match-ratio', null, {
         params: {
@@ -40,16 +47,12 @@ const Share = ({ onClose }) => {
       });
 
       // API 응답 구조를 디버깅
-      console.log('API 응답:', response.data);
+      console.log('fetchMatchRatio API 응답:', response.data);
 
-      // 응답 검증
-      if (
-        !response.data ||
-        !response.data.result ||
-        !(typeof response.data.result.similarity_score === 'number') ||
-        !Array.isArray(response.data.result.user1_keywords) ||
-        !Array.isArray(response.data.result.user2_keywords)
-      ) {
+      // 데이터 검증
+      const result = response.data?.result;
+      if (!result) {
+        console.error('result 값이 존재하지 않습니다:', response.data);
         throw new Error('올바르지 않은 응답 데이터 구조를 받았습니다.');
       }
 
@@ -69,7 +72,9 @@ const Share = ({ onClose }) => {
       }
     } catch (error) {
       console.error('API 요청 실패:', error);
-      setError('데이터를 불러오지 못했습니다.');
+      setError(
+        error.response?.data?.message || '데이터를 불러오지 못했습니다.'
+      );
       setMatchData({
         similarity_score: 0,
         user1_keywords: [],
