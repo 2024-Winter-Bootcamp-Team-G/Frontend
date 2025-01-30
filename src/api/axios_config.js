@@ -7,7 +7,7 @@ export const BASE_URL =
 // 기본 Axios 인스턴스 생성
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000, // 요청 대기 시간 10초 제한
+  timeout: 20000, // 요청 대기 시간 10초 제한
   headers: {
     'Content-Type': 'application/json', // 기본 Content-Type 설정
   },
