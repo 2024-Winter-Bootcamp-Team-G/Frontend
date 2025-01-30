@@ -77,7 +77,7 @@ const MiniH = () => {
                 3. 보드판에 보드가 생성됩니다.
               </div>
             </div>
-            <div className="flex flex-col md:flex-row mt-3 items-center mx-12 gap-56 justify-center">
+            <div className="flex justify-between items-center mt-3 mx-12">
               <img
                 src={SubHelp}
                 alt="Sub Help"
