@@ -21,8 +21,7 @@ const Match = ({ onClose }) => {
     try {
       // API 요청: 공유된 보드 정보 가져오기
       const response = await api.get(`/boards/shared/${code}`);
-      const sharedBoardId = response.data.shared_board.id;
-
+      const sharedBoardId = response.data?.result?.shared_board?.id;
       setCookie('shared_board_id', sharedBoardId, 1);
 
       console.log('공유된 보드 정보:', response.data);
