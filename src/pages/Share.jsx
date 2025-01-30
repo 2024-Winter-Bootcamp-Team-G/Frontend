@@ -46,7 +46,9 @@ const Share = ({ onClose }) => {
       if (
         !response.data ||
         !response.data.result ||
-        !response.data.result.shared_board
+        !(typeof response.data.result.similarity_score === 'number') ||
+        !Array.isArray(response.data.result.user1_keywords) ||
+        !Array.isArray(response.data.result.user2_keywords)
       ) {
         throw new Error('올바르지 않은 응답 데이터 구조를 받았습니다.');
       }
