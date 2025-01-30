@@ -27,12 +27,12 @@ const Share = ({ onClose }) => {
   const fetchMatchRatio = async (selectedBoard) => {
     setIsLoading(true);
     setError('');
-
+    const SharedBoardId = getCookie('shared_board_id');
     try {
       const response = await api.post('/boards/match-ratio', null, {
         params: {
           board_id1: selectedBoard, // 선택한 보드 ID
-          board_id2: getCookie('shared_board_id'), // 쿠키에서 가져온 보드 ID
+          board_id2: SharedBoardId, // 쿠키에서 가져온 보드 ID
         },
         headers: {
           Authorization: `Bearer ${getCookie('access_token')}`, // 인증 토큰
