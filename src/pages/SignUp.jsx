@@ -34,9 +34,9 @@ const SignUp = () => {
       const response = await api.get(`/auth/check-email`, {
         params: { email },
       });
-      if (response.data.exists) {
-        setEmailExists(false);
+      if (!response.data.exists) {
         alert('사용 가능한 이메일입니다.');
+        setEmailExists(false);
       }
     } catch (error) {
       console.error('이메일 확인 오류:', error);
