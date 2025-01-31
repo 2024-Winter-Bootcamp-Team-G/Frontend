@@ -14,7 +14,7 @@ import Start from './pages/Start';
 
 const App = () => {
   useEffect(() => {
-    document.title = 'Algo.com';
+    document.title = 'Algorify';
   }, []);
   return (
     <BrowserRouter>

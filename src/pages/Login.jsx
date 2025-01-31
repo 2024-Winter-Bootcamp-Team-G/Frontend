@@ -72,7 +72,7 @@ const Login = () => {
               className="relative bottom-[2rem] left-[8rem]"
             />
             <p className="relative -bottom-[11rem] -left-[8rem] text-black text-[4rem]">
-              Algo.com
+              Algorify
             </p>
           </div>
           <div className="w-[60%]">
