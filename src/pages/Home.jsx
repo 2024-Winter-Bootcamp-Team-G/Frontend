@@ -25,7 +25,7 @@ const Home = () => {
               }}
               className="absolute top-20 left-6 font-nomal"
             >
-              Algorify에 오신것을 환영합니다.
+              Algorify.net에 오신것을 환영합니다.
             </h1>
             <div
               className="absolute top-[9rem] left-6 w-[90%] h-[3px] bg-[#868A8E] 
